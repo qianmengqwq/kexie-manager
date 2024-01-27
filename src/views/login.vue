@@ -1,5 +1,5 @@
 <script setup lang="ts"></script>
 
-<template>qwq</template>
+<template>login</template>
 
 <style scoped></style>

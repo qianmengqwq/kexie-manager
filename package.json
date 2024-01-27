@@ -9,18 +9,22 @@
     "preview": "vite preview",
     "format": "prettier  --write \"src/**/*.{ts,js,vue}\"",
     "prettier": "prettier  --write .",
-    "eslint": "eslint \"src/**/*.{ts,js,vue}\" \"src/main.ts\""
+    "eslint": "eslint \"src/**/*.{ts,js,vue}\" \"src/main.ts\"",
+    "prepare": "husky"
   },
   "dependencies": {
     "vue": "^3.3.11"
   },
   "devDependencies": {
+    "@commitlint/cli": "^18.6.0",
+    "@commitlint/config-conventional": "^18.6.0",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "@vitejs/plugin-vue": "^4.5.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-vue": "^9.20.1",
+    "husky": "^9.0.6",
     "prettier": "^3.2.4",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",

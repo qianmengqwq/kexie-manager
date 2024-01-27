@@ -17,7 +17,9 @@
   },
   "plugins": ["@typescript-eslint", "vue"],
   "rules": {
-    "vue/multi-word-component-names": "off"
+    "vue/multi-word-component-names": "off",
+    //允许any，axios封装有用到
+    "@typescript-eslint/no-explicit-any": ["off"]
   }
 }
 

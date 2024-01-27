@@ -7,7 +7,13 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
-    component: () => import('@/views/layout/layout.vue'),
+    component: () => import('@/views/layout/homeview.vue'),
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/createAct.vue'),
+      },
+    ],
   },
 ]
 

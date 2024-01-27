@@ -10,7 +10,8 @@
     "format": "prettier  --write \"src/**/*.{ts,js,vue}\"",
     "prettier": "prettier  --write .",
     "eslint": "eslint \"src/**/*.{ts,js,vue}\" \"src/main.ts\"",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint-staged":"lint-staged"
   },
   "dependencies": {
     "vue": "^3.3.11"

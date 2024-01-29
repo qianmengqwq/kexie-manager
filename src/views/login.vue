@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import router from '@/router'
 import { loginApi } from '@/apis/login'
-import { useUserStore } from '@/stores'
+import { useUserStore, useLoginStore } from '@/stores'
+import { loginTypeEnum } from '@/enums'
 import type { LoginRequestData } from '@/types'
 
 // 账密登录
 const { userId } = storeToRefs(useUserStore())
-
+const { codeBase64 } = storeToRefs(useLoginStore())
+const { getCode } = useLoginStore()
 const loginForm = reactive<LoginRequestData>({
-  username: 'huhu',
-  password: '1282',
+  username: '',
+  password: '',
   status: 0,
   code: '',
 })
@@ -36,48 +38,88 @@ const handleLogin = async () => {
   })
   //不再捕获错误，拿到错误消息没有意义，只做拦截
 }
+
+const { loginType } = storeToRefs(useLoginStore())
+
+onMounted(() => {
+  getCode()
+})
 </script>
 
 <template>
-  <div class="container flex h-full">
-    <div class="flex w-1/2">qwq</div>
+  <div class="base-container flex h-full">
+    <div class="flex w-1/2"></div>
     <div class="flex w-1/2">
-      <a-form
-        ref="loginFormRef"
-        :model="loginForm"
-        name="basic"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
-        :autocomplete="isRemberMe ? 'on' : 'off'"
-      >
-        <a-form-item
-          label="用户名"
-          name="username"
-          :rules="[{ required: true, message: '请输入用户名！' }]"
+      <div class="to-mid flex-1 flex-col">
+        <div class="text-2xl font-bold mb-2">
+          {{ loginType === loginTypeEnum.PASSWORD ? '登录' : '邮箱验证' }}
+        </div>
+        <a-form
+          v-show="loginType === loginTypeEnum.PASSWORD"
+          ref="loginFormRef"
+          :model="loginForm"
+          name="basic"
+          autocomplete="on"
+          @keypress.enter="handleLogin"
         >
-          <a-input v-model:value="loginForm.username" />
-        </a-form-item>
+          <a-form-item
+            name="username"
+            :rules="[{ required: true, message: '请输入用户名！' }]"
+          >
+            <a-input
+              v-model:value="loginForm.username"
+              placeholder="用户名"
+              class="min-w-80 h-9"
+            />
+          </a-form-item>
 
-        <a-form-item
-          label="密码"
-          name="password"
-          :rules="[{ required: true, message: '请输入密码！' }]"
-        >
-          <a-input-password v-model:value="loginForm.password" />
-        </a-form-item>
+          <a-form-item
+            name="password"
+            :rules="[{ required: true, message: '请输入密码！' }]"
+          >
+            <a-input-password
+              v-model:value="loginForm.password"
+              placeholder="密码"
+              class="min-w-80 h-9"
+            />
+          </a-form-item>
 
-        <a-form-item label="验证码" name="code">
-          <a-input v-model:value="loginForm.code" />
-        </a-form-item>
+          <a-form-item name="code">
+            <a-input
+              v-model:value="loginForm.code"
+              placeholder="验证码"
+              class="min-w-80 h-9"
+            />
+            <div
+              v-show="codeBase64"
+              @click="useLoginStore().getCode()"
+              class="cursor-pointer absolute top-0 right-1 flex justify-center items-center h-9 w-24"
+            >
+              <img :src="codeBase64" alt="" class="h-8" />
+            </div>
+          </a-form-item>
 
-        <a-form-item name="status" :wrapper-col="{ offset: 8, span: 16 }">
-          <a-checkbox v-model:checked="isRemberMe">记住我</a-checkbox>
-        </a-form-item>
+          <a-form-item name="status">
+            <div class="to-between min-w-80">
+              <a-checkbox v-model:checked="isRemberMe">记住我</a-checkbox>
+              <span
+                @click="loginType = loginTypeEnum.EMAIL"
+                class="text-sky-400 cursor-pointer"
+              >
+                邮箱登录
+              </span>
+            </div>
+          </a-form-item>
 
-        <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-          <a-button type="primary" @click="handleLogin">登录</a-button>
-        </a-form-item>
-      </a-form>
+          <a-form-item>
+            <div class="min-w-80 to-mid">
+              <a-button type="primary" @click="handleLogin" shape="round" block
+                >登录</a-button
+              >
+            </div>
+          </a-form-item>
+        </a-form>
+      </div>
     </div>
   </div>
 </template>
@@ -85,7 +127,7 @@ const handleLogin = async () => {
 <style scoped>
 /* 偷的vben的svg图背景实现 */
 /* 网上想找一些其他的条纹图案没找好，就暂时先用着吧 */
-.container::before {
+.base-container::before {
   content: '';
   position: absolute;
   top: 0;
@@ -97,6 +139,5 @@ const handleLogin = async () => {
   background-repeat: no-repeat;
   background-position: 100%;
   background-size: auto 100%;
-  opacity: 0.7;
 }
 </style>

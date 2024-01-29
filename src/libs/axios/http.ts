@@ -5,7 +5,7 @@ import { ResponseCodeEnum } from '@/enums'
 import { message } from 'ant-design-vue'
 const instance: AxiosInstance = axios.create({
   baseURL: '/api',
-  timeout: 3000,
+  timeout: 10000,
   //后端token给在cookie里
   withCredentials: true,
 })

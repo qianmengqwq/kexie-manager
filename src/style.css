@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.to-mid {
+  @apply flex justify-center items-center;
+}
+
+.to-between {
+  @apply flex justify-between items-center;
+}
+.ant-btn-primary {
+  background-color: #1677ff;
+}

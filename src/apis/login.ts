@@ -5,6 +5,7 @@ enum Api {
   login = '/admin/login',
   logout = '/admin/logout',
   getCode = '/code/getcode',
+  getEmailCode = '/admin/sendEmail',
 }
 
 const loginApi = async (data: LoginRequestData) => {
@@ -32,4 +33,11 @@ const getCodeApi = async () => {
     responseType: 'blob',
   })
 }
-export { loginApi, logoutApi, getCodeApi }
+
+const getEmailCodeApi = async (email: string) => {
+  return await $http({
+    method: 'get',
+    url: `${Api.getEmailCode}?email=${email}`,
+  })
+}
+export { loginApi, logoutApi, getCodeApi, getEmailCodeApi }

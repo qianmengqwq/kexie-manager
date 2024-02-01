@@ -1,10 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { throttle } from 'lodash-es'
 import { loginTypeEnum } from '@/enums'
-import { getCodeApi } from '@/apis/login'
+import { getCodeApi, getEmailCodeApi } from '@/apis/login'
+
+const SENDEMAILDELAY = 60000
 export const useLoginStore = defineStore('login', () => {
   const loginType = ref(loginTypeEnum.PASSWORD)
   const codeBase64 = ref('')
+  const email = ref('')
 
   const getCode = async () => {
     const res = await getCodeApi()
@@ -16,9 +20,19 @@ export const useLoginStore = defineStore('login', () => {
     }
     reader.readAsDataURL(blob)
   }
+
+  const getEmailCodeFn = async () => {
+    await getEmailCodeApi(email.value)
+  }
+
+  const getEmailCode = throttle(getEmailCodeFn, SENDEMAILDELAY, {
+    trailing: false,
+  })
+
   return {
     loginType,
     codeBase64,
     getCode,
+    getEmailCode,
   }
 })

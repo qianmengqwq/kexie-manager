@@ -21,3 +21,9 @@ https://juejin.cn/post/7231883802196066362?from=search-suggest
 采用再覆盖的方式
 
 出于此顾虑也不再引入daisyUI
+
+### Refactor: axios封装
+
+在对全局message处理的时候突然想到可以使用请求拦截器，但是处理下来的感觉怪怪的
+
+保留两个版本

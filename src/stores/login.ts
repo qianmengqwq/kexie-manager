@@ -8,8 +8,6 @@ export const useLoginStore = defineStore('login', () => {
 
   const getCode = async () => {
     const res = await getCodeApi()
-    console.log('res', res)
-
     const blob = new Blob([res.data], { type: 'image/png' })
     const reader = new FileReader()
     reader.onload = function (event) {

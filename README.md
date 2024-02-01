@@ -27,3 +27,8 @@ https://juejin.cn/post/7231883802196066362?from=search-suggest
 在对全局message处理的时候突然想到可以使用请求拦截器，但是处理下来的感觉怪怪的
 
 保留两个版本
+
+
+### 样式问题
+
+对于a-select，w-64的class不起作用，只能通过css写，而input保持正常

@@ -8,6 +8,9 @@ dependencies:
   '@ant-design/icons-vue':
     specifier: ^7.0.1
     version: 7.0.1(vue@3.4.15)
+  '@tinymce/tinymce-vue':
+    specifier: ^5.1.1
+    version: 5.1.1(vue@3.4.15)
   '@types/lodash-es':
     specifier: ^4.17.12
     version: 4.17.12
@@ -26,6 +29,9 @@ dependencies:
   pinia-plugin-persistedstate:
     specifier: ^3.2.1
     version: 3.2.1(pinia@2.1.7)
+  tinymce:
+    specifier: ^6.8.2
+    version: 6.8.2
   vue:
     specifier: ^3.3.11
     version: 3.4.15(typescript@5.3.3)
@@ -792,6 +798,15 @@ packages:
     dependencies:
       core-js: 3.35.1
       nanopop: 2.4.2
+    dev: false
+
+  /@tinymce/tinymce-vue@5.1.1(vue@3.4.15):
+    resolution: {integrity: sha512-iO57HOWesFOhsaqjA5Ea6sDvQBmJJH3/dq00Uvg7metlct2kLF+ctRgoDsetLt6gmeZ7COPftr814/XzqnJ/dg==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      tinymce: 6.8.2
+      vue: 3.4.15(typescript@5.3.3)
     dev: false
 
   /@types/estree@1.0.5:
@@ -3364,6 +3379,10 @@ packages:
   /through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
     dev: true
+
+  /tinymce@6.8.2:
+    resolution: {integrity: sha512-Lho79o2Y1Yn+XdlTEkHTEkEmzwYWTXz7IUsvPwxJF3VTtgHUIAAuBab29kik+f2KED3rZvQavr9D7sHVMJ9x4A==}
+    dev: false
 
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}

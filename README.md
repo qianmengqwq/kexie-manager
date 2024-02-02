@@ -28,6 +28,9 @@ https://juejin.cn/post/7231883802196066362?from=search-suggest
 
 保留两个版本
 
+axios封装还是有问题，不是所有请求都要使用message交互的，在考虑这个的解决方案
+
+或许只用全局错误处理，成功的话在对应处理数据的逻辑里塞上message？
 
 ### 样式问题
 

@@ -24,6 +24,10 @@ const model = defineModel()
 const tinymceId = ref(
   'vue-tinymce-' + +new Date() + ((Math.random() * 1000).toFixed(0) + ''),
 )
+
+// const uploadImg = async (blobInfo, progress) =>
+//   new Promise((resolve, reject) => {})
+
 // 初始化
 const init = reactive({
   height: 400,
@@ -31,7 +35,7 @@ const init = reactive({
   language_url: '/tinymce/langs/zh-Hans.js', // 语言包的路径，具体路径看自己的项目，文档后面附上中文js文件
   language: 'zh-Hans', //语言
   skin_url: '/tinymce/skins/ui/oxide', // skin路径，具体路径看自己的项目
-  plugins: 'link lists image code table  wordcount',
+  plugins: 'link lists image code table wordcount',
   toolbar:
     'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat',
   branding: false, // 去掉编辑器右下角的广告
@@ -39,7 +43,9 @@ const init = reactive({
   paste_webkit_styles: 'all',
   paste_merge_formats: true,
   paste_data_images: false, // 不允许粘贴图片
+  // images_upload_handler: uploadImg,
 })
+
 //在onMounted中初始化编辑器
 onMounted(() => {
   tinymce.init({})

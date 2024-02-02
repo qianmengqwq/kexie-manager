@@ -157,6 +157,7 @@ onMounted(() => {
         :rules="rules"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
+        style="width: 450px"
       >
         <a-form-item label="活动主题" name="title">
           <a-input
@@ -230,33 +231,34 @@ onMounted(() => {
           />
         </a-form-item>
         <hr />
-        <a-form-item name="totalnumber">
-          <div class="flex mt-3">
-            <div class="flex justify-end items-center" style="width: 256px">
-              <span class="px-2">活动总人数:&nbsp;</span>
-            </div>
-            <div>
-              <a-slider
-                v-model:value="sliderNum"
-                :marks="{
-                  0: '0',
-                  20: '20',
-                  40: '40',
-                  60: '60',
-                  80: '80',
-                  100: '100',
-                }"
-                style="width: 243px"
-              />
+
+        <div class="flex mt-3">
+          <div class="flex justify-end items-center" style="width: 113px">
+            <span class="px-2">活动总人数:&nbsp;</span>
+          </div>
+          <div>
+            <a-slider
+              v-model:value="sliderNum"
+              :marks="{
+                0: '0',
+                20: '20',
+                40: '40',
+                60: '60',
+                80: '80',
+                100: '100',
+              }"
+              style="width: 243px"
+            />
+            <a-form-item name="totalnumber">
               <a-input
                 v-model:value="formState.totalnumber"
                 placeholder="活动总人数"
                 class="w-64"
                 type="number"
               />
-            </div>
+            </a-form-item>
           </div>
-        </a-form-item>
+        </div>
 
         <a-form-item label="菁英会员人数" name="totalnumber">
           <a-input

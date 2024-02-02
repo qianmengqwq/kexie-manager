@@ -3,7 +3,7 @@ import { Activity } from '@/types'
 enum Api {
   createAct = '/activity/create',
   postedActList = '/activity/getPublishList',
-  savedActList = '/activity/getSavedList',
+  savedActList = '/activity/geSavedList',
   deleteAct = '/activity/delete',
   updateAct = '/activity/update',
   getActById = '/activity/getDetailMsg',

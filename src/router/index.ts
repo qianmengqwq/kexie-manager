@@ -7,11 +7,19 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
-    component: () => import('@/views/layout/homeview.vue'),
+    component: () => import('@/views/layout/homeView.vue'),
     children: [
       {
         path: 'create',
         component: () => import('@/views/createAct.vue'),
+      },
+      {
+        path: 'saved',
+        component: () => import('@/views/savedAct.vue'),
+      },
+      {
+        path: 'posted',
+        component: () => import('@/views/postedAct.vue'),
       },
     ],
   },

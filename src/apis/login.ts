@@ -1,6 +1,5 @@
-import $http, { instance } from '@/libs/axios/http'
-import { LoginRequestData } from '@/types'
-
+import service from '@/libs/axios/http'
+import { KexieResponse, LoginRequestData } from '@/types'
 enum Api {
   login = '/admin/login',
   logout = '/admin/logout',
@@ -8,36 +7,14 @@ enum Api {
   getEmailCode = '/admin/sendEmail',
 }
 
-const loginApi = async (data: LoginRequestData) => {
-  const { result } = await $http<{ uid: string }>({
-    method: 'post',
-    url: Api.login,
-    data,
-  })
-  return result
-}
-
-const logoutApi = async () => {
-  await $http({
-    method: 'get',
-    url: Api.logout,
-  })
-}
-
-const getCodeApi = async () => {
-  // res拿到的是Blob数据
-  return await instance({
-    method: 'post',
-    url: Api.getCode,
-    //指定请求的文件类型是blob 默认是json
-    responseType: 'blob',
-  })
-}
-
-const getEmailCodeApi = async (email: string) => {
-  return await $http({
-    method: 'get',
-    url: `${Api.getEmailCode}?email=${email}`,
-  })
-}
+const loginApi = (data: LoginRequestData) =>
+  service.post<KexieResponse<{ userId: string }>>(Api.login, { data })
+const getEmailCodeApi = (email: string) =>
+  service.get<KexieResponse<{ userId: string }>>(
+    `${Api.getEmailCode}?email=${email}`,
+  )
+const getCodeApi = () =>
+  service.post<Blob>(Api.getCode, null, { responseType: 'blob' })
+const logoutApi = () => service.get<KexieResponse<null>>(Api.logout)
+//指定请求的文件类型是blob 默认是json
 export { loginApi, logoutApi, getCodeApi, getEmailCodeApi }

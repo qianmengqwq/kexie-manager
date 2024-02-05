@@ -1,5 +1,5 @@
-import $http from '@/libs/axios/http'
-import { Activity } from '@/types'
+import service from '@/libs/axios/http'
+import { Activity, KexieResponse } from '@/types'
 enum Api {
   createAct = '/activity/create',
   postedActList = '/activity/getPublishList',
@@ -10,63 +10,27 @@ enum Api {
   getActListwithFuzzyPage = '/activity/fuzzyPage',
 }
 
-const createActApi = async (data: Activity) => {
-  return await $http({
-    method: 'post',
-    url: Api.createAct,
-    data,
-  })
-}
+const createActApi = (data: Activity) =>
+  service.post<KexieResponse<null>>(Api.createAct, data)
 
-const getPostedActListApi = async () => {
-  const { result } = await $http<{ total: number; rows: Activity[] }>({
-    method: 'get',
-    url: Api.postedActList,
-  })
-  if (result) {
-    const { total, rows } = result
-    return { total, rows }
-  }
-  return { total: 0, rows: [] }
-}
+const getPostedActListApi = () =>
+  service.get<KexieResponse<{ total: number; rows: Activity[] }>>(
+    Api.postedActList,
+  )
 
-const getSavedActListApi = async () => {
-  const { result } = await $http<{ total: number; rows: Activity[] }>({
-    method: 'get',
-    url: Api.savedActList,
-  })
-  return result
-}
+const getSavedActListApi = () =>
+  service.get<KexieResponse<{ total: number; rows: Activity[] }>>(
+    Api.savedActList,
+  )
 
-const deleteActByIdApi = async (id: string) => {
-  return await $http({
-    method: 'get',
-    url: `${Api.deleteAct}?id=${id}`,
-  })
-}
+const deleteActByIdApi = (id: string) =>
+  service.get<KexieResponse<Activity>>(`Api.deleteAct?id=${id}`)
 
-const updateActApi = async (data: Activity) => {
-  const { result } = await $http<Activity>({
-    method: 'post',
-    url: Api.updateAct,
-    data,
-  })
-  return result
-}
+const updateActApi = (data: Activity) =>
+  service.post<KexieResponse<Activity>>(Api.updateAct, data)
 
-const getActByIdApi = async (id: string) => {
-  const { result } = await $http<Activity>({
-    method: 'get',
-    url: `${Api.getActById}?id=${id}`,
-  })
-  return result
-}
-
-// const getActListWithFuzzyPageApi = async (data: Activity & PageParams) => {
-//   const { result } = await $http<{ total: number; rows: Activity[] }>({
-
-//   })
-// }
+const getActByIdApi = (id: string) =>
+  service.get<Activity>(`Api.getActById?id=${id}`)
 
 export {
   getPostedActListApi,

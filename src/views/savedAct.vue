@@ -1,15 +1,12 @@
 <script lang="ts" setup>
-import { getSavedActListApi } from '@/apis/activity'
+import {
+  getSavedActListApi,
+  deleteActByIdApi,
+  updateActApi,
+} from '@/apis/activity'
 import { ref, onMounted } from 'vue'
 import type { Activity, PageParam } from '@/types'
-// interface RowData {
-//   title: string
-//   holdtime: string
-//   speaker: string
-//   college: string
-//   totalnumber: number
-//   totalvipnumber: number
-// }
+import { message } from 'ant-design-vue'
 
 const columns = [
   {
@@ -65,6 +62,18 @@ const getSavedActList = async () => {
   }
 }
 
+const handleUpdate = async (record: Activity) => {
+  console.log('record', record)
+  record.status = 1
+  const res = await updateActApi(record)
+  console.log('res', res)
+}
+const handleDelete = async (id: string) => {
+  const res = await deleteActByIdApi(id)
+  console.log('res', res)
+  message.success(res.msg)
+  getSavedActList()
+}
 onMounted(async () => {
   getSavedActList()
 })
@@ -86,6 +95,8 @@ onMounted(async () => {
             }"
             >详情</router-link
           >
+          <a class="ml-2" @click="handleDelete(record.activityid)">删除</a>
+          <a class="ml-2" @click="handleUpdate(record)">发布</a>
         </span>
       </template>
     </template>

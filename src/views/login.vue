@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, reactive, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import axios from 'axios'
 import router from '@/router'
 import { loginApi } from '@/apis/login'
 import { useUserStore, useLoginStore } from '@/stores'
+import { useRequest } from 'vue-request'
 import { loginTypeEnum } from '@/enums'
 import type { LoginRequestData } from '@/types'
 
@@ -30,11 +32,7 @@ const isRemberMe = computed({
 const loginFormRef = ref()
 const handleLogin = async () => {
   loginFormRef.value.validate().then(async () => {
-    const res = await loginApi(loginForm)
-    if (res) {
-      userId.value = res.uid
-      router.push({ path: '/' })
-    }
+    const { data, error } = useRequest(loginApi)
   })
   //不再捕获错误，拿到错误消息没有意义，只做拦截
 }

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { reactive, ref, toRaw, computed, onMounted } from 'vue'
+import { createActApi } from '@/apis/activity'
 import { useCollegeStore } from '@/stores'
 import type { UnwrapRef } from 'vue'
 import type { Rule } from 'ant-design-vue/es/form'
@@ -131,10 +132,12 @@ const rules: Record<string, Rule[]> = {
   ],
 }
 
-const onSubmit = () => {
+const onSubmit = async (status: number) => {
   formRef.value.validate().then(() => {
     console.log('values', formState, toRaw(formState))
   })
+  const res = await createActApi({ ...formState, status })
+  console.log('res', res)
 }
 const resetForm = () => {
   formRef.value.resetFields()
@@ -282,7 +285,8 @@ onMounted(() => {
     <div>
       <Editor v-model="formState.content"></Editor>
       <div>
-        <a-button type="primary" @click="onSubmit">Create</a-button>
+        <a-button type="primary" @click="onSubmit(0)">保存</a-button>
+        <a-button type="primary" @click="onSubmit(1)">发布</a-button>
         <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>
       </div>
     </div>

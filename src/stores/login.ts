@@ -3,12 +3,15 @@ import { ref } from 'vue'
 import { throttle } from 'lodash-es'
 import { loginTypeEnum } from '@/enums'
 import { getCodeApi, getEmailCodeApi } from '@/apis/login'
-
+import { useRequest } from 'vue-request'
 const SENDEMAILDELAY = 60000
 export const useLoginStore = defineStore('login', () => {
   const loginType = ref(loginTypeEnum.PASSWORD)
   const codeBase64 = ref('')
   const email = ref('')
+
+  const { data } = useRequest(getCodeApi)
+  console.log('data22222', data)
 
   const getCode = async () => {
     const res = await getCodeApi()

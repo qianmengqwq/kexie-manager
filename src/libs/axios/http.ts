@@ -2,9 +2,9 @@ import { message } from 'ant-design-vue'
 import axios from 'axios'
 // import axiosRetry from 'axios-retry'
 import { AxiosInstance } from 'axios'
-import type { AxiosRequestConfig } from 'axios'
-import { KexieResponse } from '@/types'
 import { ResponseCodeEnum } from '@/enums'
+import type { KexieResponse } from '@/types'
+import type { AxiosRequestConfig } from 'axios'
 
 interface ExtendAxiosParams {
   IsShowErrorMsg?: boolean
@@ -35,12 +35,10 @@ const $http = {
           if (res.code !== ResponseCodeEnum.SUCCESS) {
             throw new Error(res.msg)
           }
-          console.log('result', result)
           handleRequestMsg(extendParams?.IsShowSuccessMsg, 'success', res?.msg)
-          resolve([null, res as KexieResponse<T>])
+          resolve([null, res])
         })
         .catch((error) => {
-          console.log(error, 'error')
           handleRequestMsg(extendParams?.IsShowErrorMsg, 'error', error?.msg)
           resolve([error, undefined])
         })
@@ -61,12 +59,10 @@ const $http = {
           if (res.code !== ResponseCodeEnum.SUCCESS) {
             throw new Error(res.msg)
           }
-          console.log('result', result)
           handleRequestMsg(extendParams?.IsShowSuccessMsg, 'success', res?.msg)
-          resolve([null, res as KexieResponse<T>])
+          resolve([null, res])
         })
         .catch((error) => {
-          console.log(error, 'error')
           handleRequestMsg(
             extendParams?.IsShowErrorMsg,
             'error',

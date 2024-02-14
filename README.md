@@ -44,6 +44,9 @@ api：封装请求url、方法、类型参数
 
 useRequest：实际业务需求，获取/操作请求状态，实现对应业务以及message提示
 
+### refactor: axios封装
+
+useRequest又多包了一层，不符合需求。最后的version还是采取了封装一个请求类来实现一些扩展功能
 
 ### 样式问题
 

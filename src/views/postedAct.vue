@@ -2,14 +2,6 @@
 import { getPostedActListApi } from '@/apis/activity'
 import { ref, onMounted } from 'vue'
 import type { Activity, PageParam } from '@/types'
-// interface RowData {
-//   title: string
-//   holdtime: string
-//   speaker: string
-//   college: string
-//   totalnumber: number
-//   totalvipnumber: number
-// }
 
 const columns = [
   {
@@ -57,10 +49,11 @@ const pageParam = ref<PageParam>({
 })
 
 const getSavedActList = async () => {
-  const res = await getPostedActListApi()
-  if (res.rows) {
-    savedActList.value = res.rows
-    pageParam.value.total = res.total
+  const [e, r] = await getPostedActListApi()
+  if (!e && r) {
+    const { result } = r
+    savedActList.value = result.rows
+    pageParam.value.total = result.total
     isLoading.value = false
   }
 }

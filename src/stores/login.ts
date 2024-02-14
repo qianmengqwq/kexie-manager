@@ -3,25 +3,31 @@ import { ref } from 'vue'
 import { throttle } from 'lodash-es'
 import { loginTypeEnum } from '@/enums'
 import { getCodeApi, getEmailCodeApi } from '@/apis/login'
-import { useRequest } from 'vue-request'
+
+// 发送验证码的间隔
 const SENDEMAILDELAY = 60000
+
 export const useLoginStore = defineStore('login', () => {
   const loginType = ref(loginTypeEnum.PASSWORD)
   const codeBase64 = ref('')
   const email = ref('')
 
-  const { data } = useRequest(getCodeApi)
-  console.log('data22222', data)
-
+  // getCodeApi采用的是axios实例，因为返回的是blob而非KexieResponse
   const getCode = async () => {
-    const res = await getCodeApi()
-    const blob = new Blob([res.data], { type: 'image/png' })
-    const reader = new FileReader()
-    reader.onload = function (event) {
-      const base64String = event.target?.result
-      codeBase64.value = base64String as string
+    try {
+      const res = await getCodeApi().catch((e: any) => console.error(e))
+      if (res) {
+        const blob = new Blob([res.data], { type: 'image/png' })
+        const reader = new FileReader()
+        reader.onload = function (event) {
+          const base64String = event.target?.result
+          codeBase64.value = base64String as string
+        }
+        reader.readAsDataURL(blob)
+      }
+    } catch (err) {
+      console.error(err)
     }
-    reader.readAsDataURL(blob)
   }
 
   const getEmailCodeFn = async () => {

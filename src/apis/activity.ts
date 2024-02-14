@@ -1,5 +1,5 @@
-import service from '@/libs/axios/http'
-import { Activity, KexieResponse } from '@/types'
+import service, { $http } from '@/libs/axios/http'
+import { Activity } from '@/types'
 enum Api {
   createAct = '/activity/create',
   postedActList = '/activity/getPublishList',
@@ -11,23 +11,32 @@ enum Api {
 }
 
 const createActApi = (data: Activity) =>
-  service.post<KexieResponse<null>>(Api.createAct, data)
+  $http.post<null>(Api.createAct, data, undefined, {
+    IsShowErrorMsg: true,
+    IsShowSuccessMsg: true,
+  })
 
 const getPostedActListApi = () =>
-  service.get<KexieResponse<{ total: number; rows: Activity[] }>>(
-    Api.postedActList,
-  )
+  $http.get<{ total: number; rows: Activity[] }>(Api.postedActList, undefined, {
+    IsShowErrorMsg: true,
+  })
 
 const getSavedActListApi = () =>
-  service.get<KexieResponse<{ total: number; rows: Activity[] }>>(
-    Api.savedActList,
-  )
+  $http.get<{ total: number; rows: Activity[] }>(Api.savedActList, undefined, {
+    IsShowErrorMsg: true,
+  })
 
 const deleteActByIdApi = (id: string) =>
-  service.get<KexieResponse<Activity>>(`Api.deleteAct?id=${id}`)
+  $http.get<Activity>(`Api.deleteAct?id=${id}`, undefined, {
+    IsShowErrorMsg: true,
+    IsShowSuccessMsg: true,
+  })
 
 const updateActApi = (data: Activity) =>
-  service.post<KexieResponse<Activity>>(Api.updateAct, data)
+  $http.post<Activity>(Api.updateAct, data, undefined, {
+    IsShowErrorMsg: true,
+    IsShowSuccessMsg: true,
+  })
 
 const getActByIdApi = (id: string) =>
   service.get<Activity>(`Api.getActById?id=${id}`)

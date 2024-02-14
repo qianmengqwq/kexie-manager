@@ -1,10 +1,10 @@
-import service from '@/libs/axios/http'
-import { User, KexieResponse } from '@/types'
+import { $http } from '@/libs/axios/http'
+import { User } from '@/types'
 enum Api {
   getUserInfo = '/admin/get',
 }
 
 const getUserInfoApi = (id: number) =>
-  service.get<KexieResponse<User>>(`${Api.getUserInfo}?id=${id}`)
+  $http.get<User>(`${Api.getUserInfo}?id=${id}`)
 
 export { getUserInfoApi }

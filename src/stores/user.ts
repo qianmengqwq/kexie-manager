@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getUserInfoApi } from '@/apis/user'
 import { useStorage } from '@/hooks/useStorage'
-import { useRequest } from 'vue-request'
 export const useUserStore = defineStore(
   'user',
   () => {
@@ -14,12 +13,14 @@ export const useUserStore = defineStore(
     const picUrl = ref<string>('')
 
     const getUserInfo = async () => {
-      const result = await getUserInfoApi(userId.value)
+      if (userId.value === 0) return
+      const [e, r] = await getUserInfoApi(userId.value)
+      if (!e && r) {
+        const { result } = r
+        picUrl.value = result.pic
+      }
     }
 
-    const { data } = useRequest(getUserInfoApi)
-    console.log('data',data);
-    
     return { userId, getUserInfo }
   },
   {

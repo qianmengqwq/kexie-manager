@@ -6,8 +6,11 @@ export const useCollegeStore = defineStore('college', () => {
   const collegeList = ref<College[]>([])
 
   const getCollegeList = async () => {
-    const result = await getCollegeListApi()
-    if (result) collegeList.value = result
+    const [e, r] = await getCollegeListApi()
+    if (!e && r) {
+      const { result } = r
+      collegeList.value = result
+    }
   }
   return {
     collegeList,

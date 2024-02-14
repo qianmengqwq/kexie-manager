@@ -5,8 +5,8 @@ import {
   updateActApi,
 } from '@/apis/activity'
 import { ref, onMounted } from 'vue'
+import { ActivityStatusEnum } from '@/enums'
 import type { Activity, PageParam } from '@/types'
-import { message } from 'ant-design-vue'
 
 const columns = [
   {
@@ -54,25 +54,25 @@ const pageParam = ref<PageParam>({
 })
 
 const getSavedActList = async () => {
-  const res = await getSavedActListApi()
-  if (res.rows) {
-    savedActList.value = res.rows
-    pageParam.value.total = res.total
+  const [e, r] = await getSavedActListApi()
+  if (!e && r) {
+    const { result } = r
+    savedActList.value = result.rows
+    pageParam.value.total = result.total
     isLoading.value = false
   }
 }
 
-const handleUpdate = async (record: Activity) => {
-  console.log('record', record)
-  record.status = 1
-  const res = await updateActApi(record)
-  console.log('res', res)
+const postAct = async (record: Activity) => {
+  record.status = ActivityStatusEnum.POSTED
+  await updateActApi(record)
 }
+
 const handleDelete = async (id: string) => {
-  const res = await deleteActByIdApi(id)
-  console.log('res', res)
-  message.success(res.msg)
-  getSavedActList()
+  const [e, r] = await deleteActByIdApi(id)
+  if (!e && r) {
+    getSavedActList()
+  }
 }
 onMounted(async () => {
   getSavedActList()
@@ -96,7 +96,7 @@ onMounted(async () => {
             >详情</router-link
           >
           <a class="ml-2" @click="handleDelete(record.activityid)">删除</a>
-          <a class="ml-2" @click="handleUpdate(record)">发布</a>
+          <a class="ml-2" @click="postAct(record)">发布</a>
         </span>
       </template>
     </template>

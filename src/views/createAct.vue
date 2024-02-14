@@ -136,8 +136,7 @@ const onSubmit = async (status: number) => {
   formRef.value.validate().then(() => {
     console.log('values', formState, toRaw(formState))
   })
-  const res = await createActApi({ ...formState, status })
-  console.log('res', res)
+  await createActApi({ ...formState, status })
 }
 const resetForm = () => {
   formRef.value.resetFields()

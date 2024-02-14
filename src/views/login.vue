@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { ref, computed, reactive, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import axios from 'axios'
 import router from '@/router'
 import { loginApi } from '@/apis/login'
 import { useUserStore, useLoginStore } from '@/stores'
-import { useRequest } from 'vue-request'
 import { loginTypeEnum } from '@/enums'
 import type { LoginRequestData } from '@/types'
 
 // 账密登录
 const { userId } = storeToRefs(useUserStore())
+// base64验证码
 const { codeBase64 } = storeToRefs(useLoginStore())
 const { getCode } = useLoginStore()
+
+// 关于表单的状态要不要抽离到store里，我也思考了很久，
+//最后的方案是表单留在login组件里，因为没有任何跨组件通讯的需求，然后把登录获取的id放到store里存储
 const loginForm = reactive<LoginRequestData>({
   username: '',
   password: '',
@@ -32,9 +34,13 @@ const isRemberMe = computed({
 const loginFormRef = ref()
 const handleLogin = async () => {
   loginFormRef.value.validate().then(async () => {
-    const { data, error } = useRequest(loginApi)
+    const [e, r] = await loginApi(loginForm)
+    if (!e && r) {
+      const { result } = r
+      userId.value = result.userId
+      router.push('/')
+    }
   })
-  //不再捕获错误，拿到错误消息没有意义，只做拦截
 }
 
 const { loginType } = storeToRefs(useLoginStore())
@@ -57,7 +63,7 @@ onMounted(() => {
           ref="loginFormRef"
           :model="loginForm"
           name="basic"
-          autocomplete="on"
+          autocomplete="off"
           @keypress.enter="handleLogin"
         >
           <a-form-item

@@ -21,6 +21,10 @@ const routes: RouteRecordRaw[] = [
         path: 'posted',
         component: () => import('@/views/postedAct.vue'),
       },
+      {
+        path: 'infoExtraction',
+        component: () => import('@/views/infoExtraction.vue'),
+      },
     ],
   },
 ]

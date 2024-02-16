@@ -11,4 +11,5 @@ import router from '@/router'
 import store from './stores'
 
 const app = createApp(App)
+
 app.use(router).use(Antd).use(store).mount('#app')

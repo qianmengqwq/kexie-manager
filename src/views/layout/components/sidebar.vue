@@ -26,7 +26,7 @@ const asideItemMap: MenuItem[] = [
   { name: '已发布的活动', route: '/posted', key: '3', icon: UploadOutlined },
   {
     name: '报名信息审核',
-    route: '/inforExtraction',
+    route: '/infoExtraction',
     key: '4',
     icon: UploadOutlined,
   },

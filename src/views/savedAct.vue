@@ -65,7 +65,10 @@ const getSavedActList = async () => {
 
 const postAct = async (record: Activity) => {
   record.status = ActivityStatusEnum.POSTED
-  await updateActApi(record)
+  const [e, r] = await updateActApi(record)
+  if (!e && r) {
+    getSavedActList()
+  }
 }
 
 const handleDelete = async (id: string) => {

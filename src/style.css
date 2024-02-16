@@ -9,6 +9,7 @@
 .to-between {
   @apply flex justify-between items-center;
 }
+
 .ant-btn-primary {
   background-color: #1677ff;
 }

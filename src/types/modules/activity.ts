@@ -1,5 +1,5 @@
 interface Activity {
-  activityid?: string
+  activityid?: number
   status?: number
   purl?: string
   holdtime?: string

@@ -27,7 +27,7 @@ const getSavedActListApi = () =>
   })
 
 const deleteActByIdApi = (id: string) =>
-  $http.get<Activity>(`Api.deleteAct?id=${id}`, undefined, {
+  $http.get<Activity>(`${Api.deleteAct}?id=${id}`, undefined, {
     IsShowErrorMsg: true,
     IsShowSuccessMsg: true,
   })

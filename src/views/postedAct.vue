@@ -1,6 +1,11 @@
 <script lang="ts" setup>
-import { getPostedActListApi } from '@/apis/activity'
+import {
+  getPostedActListApi,
+  deleteActByIdApi,
+  updateActApi,
+} from '@/apis/activity'
 import { ref, onMounted } from 'vue'
+import { ActivityStatusEnum } from '@/enums'
 import type { Activity, PageParam } from '@/types'
 
 const columns = [
@@ -40,7 +45,7 @@ const columns = [
   },
 ]
 
-const savedActList = ref<Activity[]>()
+const postedActList = ref<Activity[]>()
 const isLoading = ref(true)
 const pageParam = ref<PageParam>({
   page: 1,
@@ -48,24 +53,39 @@ const pageParam = ref<PageParam>({
   total: 0,
 })
 
-const getSavedActList = async () => {
+const getPostedActList = async () => {
   const [e, r] = await getPostedActListApi()
   if (!e && r) {
     const { result } = r
-    savedActList.value = result.rows
+    postedActList.value = result.rows
     pageParam.value.total = result.total
     isLoading.value = false
   }
 }
 
+const handleDelete = async (id: string) => {
+  const [e, r] = await deleteActByIdApi(id)
+  if (!e && r) {
+    getPostedActList()
+  }
+}
+
+const handleRevert = async (record: Activity) => {
+  record.status = ActivityStatusEnum.SAVED
+  const [e, r] = await updateActApi(record)
+  if (!e && r) {
+    getPostedActList()
+  }
+}
+
 onMounted(async () => {
-  getSavedActList()
+  getPostedActList()
 })
 </script>
 <template>
   <a-table
     :columns="columns"
-    :data-source="savedActList"
+    :data-source="postedActList"
     bordered
     :loading="isLoading"
   >
@@ -79,6 +99,8 @@ onMounted(async () => {
             }"
             >详情</router-link
           >
+          <a class="ml-2" @click="handleDelete(record.activityid)">删除</a>
+          <a class="ml-2" @click="handleRevert(record)">撤回</a>
         </span>
       </template>
     </template>

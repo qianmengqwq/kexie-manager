@@ -5,7 +5,8 @@ import type { Activity } from '@/types'
 export const useActivityStore = defineStore('activity', () => {
   const activityForm = ref<Activity>({
     title: '',
-    college: '',
+    // 这里要设置为undefined才可以让select框里的placeholder显示
+    college: undefined,
     signupdeadline: '',
     holdtime: '',
     addressonline: '',

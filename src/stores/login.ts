@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { throttle } from 'lodash-es'
 import { loginTypeEnum } from '@/enums'
-import { getCodeApi, getEmailCodeApi } from '@/apis/login'
+import { getCodeApi, getEmailCodeApi, logoutApi } from '@/apis/login'
+import router from '@/router'
 
 // 发送验证码的间隔
 const SENDEMAILDELAY = 60000
@@ -38,10 +39,17 @@ export const useLoginStore = defineStore('login', () => {
     trailing: false,
   })
 
+  const logout = async () => {
+    const [e, r] = await logoutApi()
+    if (!e && r) {
+      router.push({ name: 'login' })
+    }
+  }
   return {
     loginType,
     codeBase64,
-    getCode,
     getEmailCode,
+    getCode,
+    logout,
   }
 })

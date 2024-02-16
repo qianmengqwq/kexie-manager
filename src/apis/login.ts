@@ -25,7 +25,10 @@ const getEmailCodeApi = (email: string) =>
   )
 
 const logoutApi = () =>
-  $http.get<null>(Api.logout, undefined, { IsShowErrorMsg: true })
+  $http.get<null>(Api.logout, undefined, {
+    IsShowErrorMsg: true,
+    IsShowSuccessMsg: true,
+  })
 
 // 指定请求的文件类型是blob 默认是json
 // 特殊请求之一，直接用的service

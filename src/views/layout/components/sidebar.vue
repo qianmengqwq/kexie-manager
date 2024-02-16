@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {
   UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
+  SaveOutlined,
+  SendOutlined,
+  ToolOutlined,
 } from '@ant-design/icons-vue'
 
 import { useMenuStore } from '@/stores'
@@ -21,14 +22,14 @@ const asideItemMap: MenuItem[] = [
     name: '已保存的活动',
     route: '/saved',
     key: '2',
-    icon: VideoCameraOutlined,
+    icon: SaveOutlined,
   },
-  { name: '已发布的活动', route: '/posted', key: '3', icon: UploadOutlined },
+  { name: '已发布的活动', route: '/posted', key: '3', icon: SendOutlined },
   {
     name: '报名信息审核',
     route: '/infoExtraction',
     key: '4',
-    icon: UploadOutlined,
+    icon: ToolOutlined,
   },
 ]
 </script>
@@ -38,6 +39,7 @@ const asideItemMap: MenuItem[] = [
     :trigger="null"
     collapsible
     theme="light"
+    breakpoint="xl"
   >
     <div class="logo flex">
       <div>

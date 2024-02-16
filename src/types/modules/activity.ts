@@ -4,7 +4,7 @@ interface Activity {
   purl?: string
   holdtime?: string
   content?: string
-  college: string
+  college?: string
   createtime?: string
   title: string
   signupdeadline: string

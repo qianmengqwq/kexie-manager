@@ -12,6 +12,8 @@ export const useUserStore = defineStore(
 
     const picUrl = ref<string>('')
 
+    const notifyNum = ref<number>(0)
+
     const getUserInfo = async () => {
       if (userId.value === 0) return
       const [e, r] = await getUserInfoApi(userId.value)
@@ -21,7 +23,7 @@ export const useUserStore = defineStore(
       }
     }
 
-    return { userId, getUserInfo }
+    return { userId, notifyNum, picUrl, getUserInfo }
   },
   {
     persist: {

@@ -17,9 +17,43 @@ import 'tinymce/plugins/lists' // 列表插件
 import 'tinymce/plugins/image' // 插入上传图片插件
 import 'tinymce/plugins/wordcount' // 字数统计插件
 
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
+import { ActivityStatusEnum } from '@/enums'
+import { createActApi, updateActApi } from '@/apis/activity'
+import { debounce } from 'lodash-es'
+import { useActivityStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+import { Activity } from '@/types'
 
+const { activityForm } = storeToRefs(useActivityStore())
+const state = ref(false)
 const model = defineModel()
+
+const checkFormEmpty = (activityForm: Activity) => {
+  for (const key in activityForm) {
+    if (!activityForm[key as keyof Activity]) {
+      return true
+    }
+  }
+  return false
+}
+const saveContent = () => {
+  if (checkFormEmpty(activityForm.value)) return
+  //TODO - 改接口，创建能拿到id，通过id来判断，并且拿到id传给update
+  if (state.value) {
+    updateActApi({ ...activityForm.value, status: ActivityStatusEnum.SAVED })
+    console.log('update')
+  } else {
+    createActApi({ ...activityForm.value, status: ActivityStatusEnum.SAVED })
+    state.value = true
+    console.log(state.value)
+  }
+}
+const deboncedSave = debounce(saveContent, 1000)
+
+watch(model, () => {
+  deboncedSave()
+})
 
 const tinymceId = ref(
   'vue-tinymce-' + +new Date() + ((Math.random() * 1000).toFixed(0) + ''),

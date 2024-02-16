@@ -176,7 +176,7 @@ onMounted(async () => {
       </div>
       <!-- table -->
       <div>
-        <a-table :dataSource="dataSource" :columns="columns" />
+        <a-table :dataSource="signupInfoList" :columns="columns" />
       </div>
     </div>
   </div>

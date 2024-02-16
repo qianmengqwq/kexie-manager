@@ -27,6 +27,15 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/actDetail',
+    component: () => import('@/views/actDetail.vue'),
+  },
+  {
+    path: '/preview',
+    name: 'preview',
+    component: () => import('@/views/preview.vue'),
+  },
 ]
 
 const router = createRouter({

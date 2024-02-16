@@ -1,56 +1,19 @@
 <script lang="ts" setup>
-import { reactive, ref, toRaw, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { createActApi } from '@/apis/activity'
-import { useCollegeStore } from '@/stores'
-import type { UnwrapRef } from 'vue'
-import type { Rule } from 'ant-design-vue/es/form'
+import { useCollegeStore, useActivityStore } from '@/stores'
+import router from '@/router'
 import { storeToRefs } from 'pinia'
 import Editor from '@/components/Editor.vue'
-interface FormState {
-  title: string
-  college: string
-  signupdeadline: string
-  holdtime: string
-  addressonline: string
-  addressoffline: string
-  speaker: string
-  qqgroup: string
-  totalnumber: number
-  totalvipnumber: number
-  totalnotvipnumber: number
-  content?: string
-}
+import type { Rule } from 'ant-design-vue/es/form'
 
 const formRef = ref()
 const labelCol = { span: 6 }
 const wrapperCol = { span: 18 }
-const formState: UnwrapRef<FormState> = reactive({
-  title: '',
-  college: '',
-  signupdeadline: '',
-  holdtime: '',
-  addressonline: '',
-  addressoffline: '',
-  speaker: '',
-  qqgroup: '',
-  totalnumber: 0,
-  totalvipnumber: 0,
-  totalnotvipnumber: 0,
-  content: '',
-})
 
-// 超出限制的值，input框里可以接收
-const sliderNum = computed({
-  get() {
-    if (formState.totalnumber > 100) {
-      return 100
-    }
-    return formState.totalnumber
-  },
-  set(value) {
-    formState.totalnumber = value
-  },
-})
+const { activityForm, sliderNum } = storeToRefs(useActivityStore())
+const { collegeList } = storeToRefs(useCollegeStore())
+const { getCollegeList } = useCollegeStore()
 
 const rules: Record<string, Rule[]> = {
   title: [
@@ -134,16 +97,13 @@ const rules: Record<string, Rule[]> = {
 
 const onSubmit = async (status: number) => {
   formRef.value.validate().then(() => {
-    console.log('values', formState, toRaw(formState))
+    createActApi({ ...activityForm.value, status })
   })
-  await createActApi({ ...formState, status })
 }
 const resetForm = () => {
   formRef.value.resetFields()
+  activityForm.value.content = ''
 }
-
-const { getCollegeList } = useCollegeStore()
-const { collegeList } = storeToRefs(useCollegeStore())
 
 onMounted(() => {
   getCollegeList()
@@ -151,11 +111,32 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- header -->
+  <div class="flex">
+    <div class="w-2/3"></div>
+    <div class="w-1/3">
+      <div class="space-x-2 mb-2">
+        <a-button type="primary" @click="onSubmit(0)">保存</a-button>
+        <a-button type="primary" @click="onSubmit(1)">发布</a-button>
+        <a-button type="primary" @click="resetForm">重置</a-button>
+        <a-button
+          type="primary"
+          @click="
+            router.push({
+              name: 'preview',
+            })
+          "
+          >预览</a-button
+        >
+      </div>
+    </div>
+  </div>
+
   <div class="flex">
     <div>
       <a-form
         ref="formRef"
-        :model="formState"
+        :model="activityForm"
         :rules="rules"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
@@ -163,7 +144,7 @@ onMounted(() => {
       >
         <a-form-item label="活动主题" name="title">
           <a-input
-            v-model:value="formState.title"
+            v-model:value="activityForm.title"
             placeholder="请输入活动主题"
             class="w-64"
           />
@@ -171,7 +152,7 @@ onMounted(() => {
 
         <a-form-item label="举办学院" name="college">
           <a-select
-            v-model:value="formState.college"
+            v-model:value="activityForm.college"
             placeholder="请选择举办学院"
             style="width: 256px"
           >
@@ -186,7 +167,7 @@ onMounted(() => {
 
         <a-form-item label="报名截止时间" required name="signupdeadline">
           <a-date-picker
-            v-model:value="formState.signupdeadline"
+            v-model:value="activityForm.signupdeadline"
             show-time
             type="date"
             placeholder="请选择报名截止时间"
@@ -196,7 +177,7 @@ onMounted(() => {
         </a-form-item>
         <a-form-item label="活动举行时间" required name="holdtime">
           <a-date-picker
-            v-model:value="formState.holdtime"
+            v-model:value="activityForm.holdtime"
             show-time
             type="date"
             placeholder="请选择活动举行时间"
@@ -206,28 +187,28 @@ onMounted(() => {
         </a-form-item>
         <a-form-item label="线上地址" name="addressonline">
           <a-input
-            v-model:value="formState.addressonline"
+            v-model:value="activityForm.addressonline"
             placeholder="请输入线上地址"
             class="w-64"
           />
         </a-form-item>
         <a-form-item label="线下地址" name="addressoffline">
           <a-input
-            v-model:value="formState.addressoffline"
+            v-model:value="activityForm.addressoffline"
             placeholder="请输入线下地址"
             class="w-64"
           />
         </a-form-item>
         <a-form-item label="主讲人" name="speaker">
           <a-input
-            v-model:value="formState.speaker"
+            v-model:value="activityForm.speaker"
             class="w-64"
             placeholder="请输入主讲人"
           />
         </a-form-item>
         <a-form-item label="QQ群" name="qqgroup">
           <a-input
-            v-model:value="formState.qqgroup"
+            v-model:value="activityForm.qqgroup"
             class="w-64"
             placeholder="请输入QQ群号"
           />
@@ -253,7 +234,7 @@ onMounted(() => {
             />
             <a-form-item name="totalnumber">
               <a-input
-                v-model:value="formState.totalnumber"
+                v-model:value="activityForm.totalnumber"
                 placeholder="活动总人数"
                 class="w-64"
                 type="number"
@@ -264,7 +245,7 @@ onMounted(() => {
 
         <a-form-item label="菁英会员人数" name="totalnumber">
           <a-input
-            v-model:value="formState.totalvipnumber"
+            v-model:value="activityForm.totalvipnumber"
             placeholder="请输入菁英会员人数"
             class="w-64"
             type="number"
@@ -273,7 +254,7 @@ onMounted(() => {
 
         <a-form-item label="非菁英会员人数" name="totalnumber">
           <a-input
-            v-model:value="formState.totalnotvipnumber"
+            v-model:value="activityForm.totalnotvipnumber"
             placeholder="请输入非菁英会员人数"
             class="w-64"
             type="number"
@@ -282,12 +263,8 @@ onMounted(() => {
       </a-form>
     </div>
     <div>
-      <Editor v-model="formState.content"></Editor>
-      <div>
-        <a-button type="primary" @click="onSubmit(0)">保存</a-button>
-        <a-button type="primary" @click="onSubmit(1)">发布</a-button>
-        <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>
-      </div>
+      <header class="mb-3">活动内容:</header>
+      <Editor v-model="activityForm.content"></Editor>
     </div>
   </div>
 </template>

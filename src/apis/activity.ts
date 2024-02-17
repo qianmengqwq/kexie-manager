@@ -10,11 +10,7 @@ enum Api {
   getActListwithFuzzyPage = '/activity/fuzzyPage',
 }
 
-const createActApi = (data: Activity) =>
-  $http.post<null>(Api.createAct, data, undefined, {
-    IsShowErrorMsg: true,
-    IsShowSuccessMsg: true,
-  })
+const createActApi = (data: Activity) => $http.post<number>(Api.createAct, data)
 
 const getPostedActListApi = () =>
   $http.get<{ total: number; rows: Activity[] }>(Api.postedActList, undefined, {

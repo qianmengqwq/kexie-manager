@@ -25,7 +25,7 @@ import { useActivityStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { Activity } from '@/types'
 
-const { activityForm } = storeToRefs(useActivityStore())
+const { activityForm, activeActId } = storeToRefs(useActivityStore())
 const state = ref(false)
 const model = defineModel()
 
@@ -37,16 +37,24 @@ const checkFormEmpty = (activityForm: Activity) => {
   }
   return false
 }
-const saveContent = () => {
+const saveContent = async () => {
   if (checkFormEmpty(activityForm.value)) return
-  //TODO - 改接口，创建能拿到id，通过id来判断，并且拿到id传给update
   if (state.value) {
-    updateActApi({ ...activityForm.value, status: ActivityStatusEnum.SAVED })
-    console.log('update')
+    updateActApi({
+      ...activityForm.value,
+      status: ActivityStatusEnum.SAVED,
+      activityid: activeActId.value,
+    })
   } else {
-    createActApi({ ...activityForm.value, status: ActivityStatusEnum.SAVED })
+    const [e, r] = await createActApi({
+      ...activityForm.value,
+      status: ActivityStatusEnum.SAVED,
+    })
+    if (!e && r) {
+      const { result } = r
+      activeActId.value = result
+    }
     state.value = true
-    console.log(state.value)
   }
 }
 const deboncedSave = debounce(saveContent, 1000)

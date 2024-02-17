@@ -19,6 +19,8 @@ export const useActivityStore = defineStore('activity', () => {
     content: '',
   })
 
+  const activeActId = ref<number>(0)
+
   // 超出限制的值，input框里可以接收
   const sliderNum = computed({
     get() {
@@ -38,5 +40,6 @@ export const useActivityStore = defineStore('activity', () => {
   return {
     activityForm,
     sliderNum,
+    activeActId,
   }
 })

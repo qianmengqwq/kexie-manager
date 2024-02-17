@@ -6,6 +6,7 @@ import {
   getSignupInfoByIdApi,
 } from '@/apis/signup'
 import { ref, onMounted } from 'vue'
+import PageHeader from '@/components/PageHeader.vue'
 import type { Activity, Student } from '@/types'
 
 interface ListData {
@@ -124,6 +125,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <PageHeader></PageHeader>
   <div class="flex">
     <div class="w-1/4">
       <span>选择一个活动</span>

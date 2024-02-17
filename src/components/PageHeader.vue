@@ -1,12 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useMetaTitle } from '@/hooks/useMetaTitle'
+import router from '@/router'
+
+const title = useMetaTitle()
+</script>
 
 <template>
-  <a-page-header
-    style="border: 1px solid rgb(235, 237, 240)"
-    title="Title"
-    sub-title="This is a subtitle"
-    @back="() => null"
-  />
+  <a-page-header :title="title" @back="router.back()" class="pt-0" />
 </template>
 
 <style scoped></style>

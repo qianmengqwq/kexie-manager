@@ -4,6 +4,7 @@ import {
   deleteActByIdApi,
   updateActApi,
 } from '@/apis/activity'
+import PageHeader from '@/components/PageHeader.vue'
 import { ref, onMounted } from 'vue'
 import { ActivityStatusEnum } from '@/enums'
 import type { Activity, PageParam } from '@/types'
@@ -83,6 +84,7 @@ onMounted(async () => {
 })
 </script>
 <template>
+  <PageHeader></PageHeader>
   <a-table
     :columns="columns"
     :data-source="postedActList"

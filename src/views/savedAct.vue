@@ -6,6 +6,7 @@ import {
 } from '@/apis/activity'
 import { ref, onMounted } from 'vue'
 import { ActivityStatusEnum } from '@/enums'
+import PageHeader from '@/components/PageHeader.vue'
 import type { Activity, PageParam } from '@/types'
 
 const columns = [
@@ -82,6 +83,7 @@ onMounted(async () => {
 })
 </script>
 <template>
+  <PageHeader></PageHeader>
   <a-table
     :columns="columns"
     :data-source="savedActList"

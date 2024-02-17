@@ -5,6 +5,7 @@ import { useCollegeStore, useActivityStore } from '@/stores'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
 import Editor from '@/components/Editor.vue'
+import PageHeader from '@/components/PageHeader.vue'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formRef = ref()
@@ -113,6 +114,7 @@ onMounted(() => {
 <template>
   <!-- header -->
   <div class="flex">
+    <PageHeader></PageHeader>
     <div class="w-2/3"></div>
     <div class="w-1/3">
       <div class="space-x-2 mb-2">

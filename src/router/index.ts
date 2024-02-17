@@ -10,6 +10,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
+    redirect: '/create',
     component: () => import('@/views/layout/homeView.vue'),
     children: [
       {
@@ -50,6 +51,10 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '活动内容预览' },
     component: () => import('@/views/preview.vue'),
   },
+  {
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/views/errors/404.vue'),
+  },
 ]
 
 const router = createRouter({
@@ -75,7 +80,7 @@ router.beforeEach(async (to, from) => {
 
   // 已登录不让再次登录
   if (isLogin() && to.name === 'login') {
-    return { name: from.name }
+    return { path: from.path }
   }
 })
 

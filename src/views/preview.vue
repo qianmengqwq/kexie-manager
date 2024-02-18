@@ -6,6 +6,7 @@ const { activityForm } = storeToRefs(useActivityStore())
 </script>
 <template>
   <PageHeader></PageHeader>
+
   <div v-html="activityForm.content"></div>
 </template>
 

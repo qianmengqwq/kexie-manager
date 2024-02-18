@@ -1,4 +1,4 @@
-import service, { $http } from '@/libs/axios/http'
+import { $http } from '@/libs/axios/http'
 import { Activity } from '@/types'
 enum Api {
   createAct = '/activity/create',
@@ -34,8 +34,8 @@ const updateActApi = (data: Activity) =>
     IsShowSuccessMsg: true,
   })
 
-const getActByIdApi = (id: string) =>
-  service.get<Activity>(`Api.getActById?id=${id}`)
+const getActByIdApi = (id: number) =>
+  $http.get<Activity>(`${Api.getActById}?id=${id}`)
 
 export {
   getPostedActListApi,

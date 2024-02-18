@@ -12,10 +12,17 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      '/getPic': {
+        changeOrigin: true,
+        target: 'https://kexie.cos.wuster.world',
+        headers: {
+          Referer: 'https://kexie.cos.wuster.world',
+        },
+        rewrite: (path) => path.replace(/^\/getPic/, ''),
+      },
       '/api': {
         changeOrigin: true,
         target: 'http://localhost:8080',
-        /** 是否允许跨域 */
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },

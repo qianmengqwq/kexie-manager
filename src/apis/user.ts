@@ -1,10 +1,23 @@
 import { $http } from '@/libs/axios/http'
+import axios from 'axios'
 import { User } from '@/types'
+
 enum Api {
   getUserInfo = '/admin/get',
+  uploadAvatar = '/admin/adminPic',
 }
 
 const getUserInfoApi = (id: number) =>
   $http.get<User>(`${Api.getUserInfo}?id=${id}`)
 
-export { getUserInfoApi }
+const uploadAvatarApi = (data: FormData) =>
+  $http.post<string>(Api.uploadAvatar, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+
+const getPicApi = (picUrl: string) => {
+  const url = picUrl.replace('https://kexie.cos.wuster.world', '')
+  return axios.get<Blob>(`/getPic/${url}`, { responseType: 'blob' })
+}
+
+export { getUserInfoApi, uploadAvatarApi, getPicApi }

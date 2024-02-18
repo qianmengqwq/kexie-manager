@@ -95,8 +95,8 @@ onMounted(async () => {
         <span class="text-blue-500">
           <router-link
             :to="{
-              path: '/actDetail',
-              query: { activityId: record.activityId },
+              name: 'actDetail',
+              params: { activityid: record.activityid },
             }"
             >详情</router-link
           >

@@ -9,7 +9,7 @@ enum Api {
 }
 
 const loginApi = (data: LoginRequestData) =>
-  $http.post<{ userId: number }>(Api.login, data, undefined, {
+  $http.post<{ uid: number }>(Api.login, data, undefined, {
     IsShowSuccessMsg: true,
     IsShowErrorMsg: true,
   })

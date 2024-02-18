@@ -3,9 +3,9 @@ import { ref, computed } from 'vue'
 import type { Activity } from '@/types'
 
 export const useActivityStore = defineStore('activity', () => {
+  // 这里要设置为undefined才可以让内容的placeholder显示
   const activityForm = ref<Activity>({
     title: '',
-    // 这里要设置为undefined才可以让select框里的placeholder显示
     college: undefined,
     signupdeadline: '',
     holdtime: '',
@@ -13,9 +13,9 @@ export const useActivityStore = defineStore('activity', () => {
     addressoffline: '',
     speaker: '',
     qqgroup: '',
-    totalnumber: 0,
-    totalvipnumber: 0,
-    totalnotvipnumber: 0,
+    totalnumber: undefined,
+    totalvipnumber: undefined,
+    totalnotvipnumber: undefined,
     content: '',
   })
 

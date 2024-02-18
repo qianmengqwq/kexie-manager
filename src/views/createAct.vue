@@ -235,7 +235,8 @@ onMounted(() => {
               style="width: 243px"
             />
             <a-form-item name="totalnumber">
-              <a-input
+              <a-input-number
+                :min="0"
                 v-model:value="activityForm.totalnumber"
                 placeholder="活动总人数"
                 class="w-64"
@@ -246,7 +247,8 @@ onMounted(() => {
         </div>
 
         <a-form-item label="菁英会员人数" name="totalnumber">
-          <a-input
+          <a-input-number
+            :min="0"
             v-model:value="activityForm.totalvipnumber"
             placeholder="请输入菁英会员人数"
             class="w-64"
@@ -255,7 +257,8 @@ onMounted(() => {
         </a-form-item>
 
         <a-form-item label="非菁英会员人数" name="totalnumber">
-          <a-input
+          <a-input-number
+            :min="0"
             v-model:value="activityForm.totalnotvipnumber"
             placeholder="请输入非菁英会员人数"
             class="w-64"

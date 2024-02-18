@@ -37,7 +37,9 @@ const handleLogin = async () => {
     const [e, r] = await loginApi(loginForm)
     if (!e && r) {
       const { result } = r
-      userId.value = result.userId
+      userId.value = result.uid
+      console.log('userId', userId.value)
+
       router.push('/create')
     }
   })

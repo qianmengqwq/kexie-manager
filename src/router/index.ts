@@ -40,7 +40,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/actDetail',
+    path: '/actDetail/:activityid',
     name: 'actDetail',
     meta: { title: '活动详情' },
     component: () => import('@/views/actDetail.vue'),
@@ -67,7 +67,7 @@ const isLogin = () => {
 
   return !!token
 }
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   if (
     // 检查用户是否已登录
     !isLogin() &&
@@ -79,9 +79,9 @@ router.beforeEach(async (to, from) => {
   }
 
   // 已登录不让再次登录
-  if (isLogin() && to.name === 'login') {
-    return { path: from.path }
-  }
+  // if (isLogin() && to.name === 'login') {
+  //   return { path: from.path }
+  // }
 })
 
 export default router

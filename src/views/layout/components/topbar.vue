@@ -61,9 +61,9 @@ onMounted(async () => {
         </div>
 
         <span class="text-center text-lg"
-          >hello，{{ userInfo.username }}！</span
+          >hello，{{ userInfo.username || '管理员' }}！</span
         >
-        <LogoutOutlined class="trigger text-lg" @click="logout" />
+        <LogoutOutlined class="trigger text-lg mr-2" @click="logout" />
       </div>
     </div>
   </div>

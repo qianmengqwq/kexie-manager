@@ -4,10 +4,11 @@ import {
   getFilteredResultById,
   filterSignupInfoApi,
   getSignupInfoByIdApi,
+  getSignUpInfoListApi,
 } from '@/apis/signup'
 import { ref, onMounted } from 'vue'
 import PageHeader from '@/components/PageHeader.vue'
-import type { Activity, Student } from '@/types'
+import type { Activity, PageParam, Student } from '@/types'
 
 interface ListData {
   vipList: Student[]
@@ -60,6 +61,7 @@ const doFilter = async () => {
     }
     getFilteredData()
     getSignupInfo()
+    getTableData()
   }
 }
 
@@ -82,8 +84,25 @@ const toggleAct = async (activity: Activity) => {
   activeItem.value = activity
   //获取过滤后的信息
   getFilteredData()
-  //获取底部报名信息
+  //获取报名信息
   getSignupInfo()
+  //获取底部报名信息table
+  getTableData()
+}
+
+const pageParam = ref<PageParam>({
+  page: 1,
+  pageSize: 10,
+  total: 0,
+})
+const getTableData = async () => {
+  const [e, r] = await getSignUpInfoListApi(pageParam.value)
+  if (!e && r) {
+    const { result } = r
+    console.log(result)
+    pageParam.value.total = result.total
+    signupInfoList.value = result.rows
+  }
 }
 
 const columns = [
@@ -128,7 +147,7 @@ onMounted(async () => {
   <PageHeader></PageHeader>
   <div class="flex">
     <div class="w-1/4">
-      <span>选择一个活动</span>
+      <div class="text-xl mb-5">先选择一个活动</div>
       <a-list item-layout="horizontal" :data-source="postedActList">
         <template #renderItem="{ item }">
           <a-list-item>
@@ -146,17 +165,21 @@ onMounted(async () => {
     </div>
     <div class="w-3/4">
       <!-- header -->
-      <div>
+      <div class="flex gap-x-2">
         <span>
-          <p>已筛选的结果</p>
-          <p>若无数据，请先点击筛选按钮</p>
+          <p class="text-xl">已筛选的结果(若无数据，请先点击过滤按钮)</p>
         </span>
         <a-button @click="doFilter">过滤</a-button>
       </div>
       <!-- list -->
-      <div class="flex">
+      <div class="flex h-64">
         <div class="w-1/2 px-3">
-          <a-list size="small" bordered :data-source="listData.vipList">
+          <a-list
+            size="small"
+            bordered
+            :data-source="listData.vipList"
+            class="h-64"
+          >
             <template #renderItem="{ item }">
               <a-list-item>{{ item.name }}</a-list-item>
             </template>
@@ -166,7 +189,12 @@ onMounted(async () => {
           </a-list>
         </div>
         <div class="w-1/2">
-          <a-list size="small" bordered :data-source="listData.notVipList">
+          <a-list
+            size="small"
+            bordered
+            :data-source="listData.notVipList"
+            class="h-64"
+          >
             <template #renderItem="{ item }">
               <a-list-item>{{ item.name }}</a-list-item>
             </template>
@@ -177,7 +205,7 @@ onMounted(async () => {
         </div>
       </div>
       <!-- table -->
-      <div>
+      <div class="mt-4 flex flex-col h-64">
         <a-table :dataSource="signupInfoList" :columns="columns" />
       </div>
     </div>

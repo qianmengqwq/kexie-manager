@@ -8,6 +8,7 @@ enum Api {
   updateAct = '/activity/update',
   getActById = '/activity/getDetailMsg',
   getActListwithFuzzyPage = '/activity/fuzzyPage',
+  uploadActPic = '/upload',
 }
 
 const createActApi = (data: Activity) => $http.post<number>(Api.createAct, data)
@@ -37,6 +38,11 @@ const updateActApi = (data: Activity) =>
 const getActByIdApi = (id: number) =>
   $http.get<Activity>(`${Api.getActById}?id=${id}`)
 
+const uploadActPicApi = (data: FormData) =>
+  $http.post<string>(Api.uploadActPic, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+
 export {
   getPostedActListApi,
   getSavedActListApi,
@@ -44,4 +50,5 @@ export {
   createActApi,
   updateActApi,
   deleteActByIdApi,
+  uploadActPicApi,
 }

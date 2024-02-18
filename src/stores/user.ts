@@ -25,8 +25,6 @@ export const useUserStore = defineStore(
       const [e, r] = await getUserInfoApi(userId.value)
       if (!e && r) {
         const { result } = r
-        console.log('r', r.result)
-
         userInfo.value = result
         avatar.value = result.pic
       }

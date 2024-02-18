@@ -1,9 +1,10 @@
 import { $http } from '@/libs/axios/http'
-import type { Student } from '@/types'
+import type { PageParam, Student } from '@/types'
 enum Api {
   getSignupInfoById = '/user/signup',
   filterSignupInfo = '/activity/filter',
   getfilteredResultById = '/activity/getResultById',
+  fuzzyApplyPage = '/activity/fuzzyApplyPage',
 }
 
 const getSignupInfoByIdApi = (actId: number) =>
@@ -28,4 +29,22 @@ const getFilteredResultById = (activityId: number) =>
     listNotVip: Student[]
   }>(`${Api.getfilteredResultById}?activityId=${activityId}`)
 
-export { getSignupInfoByIdApi, filterSignupInfoApi, getFilteredResultById }
+const getSignUpInfoListApi = (
+  pageParams: PageParam,
+  searchData: Student = {} as Student,
+) =>
+  $http.post<{ total: number; rows: Student[] }>(
+    Api.fuzzyApplyPage,
+    {
+      ...pageParams,
+      ...searchData,
+    },
+    undefined,
+  )
+
+export {
+  getSignupInfoByIdApi,
+  filterSignupInfoApi,
+  getFilteredResultById,
+  getSignUpInfoListApi,
+}

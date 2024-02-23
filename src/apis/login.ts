@@ -6,6 +6,8 @@ enum Api {
   logout = '/admin/logout',
   getCode = '/code/getcode',
   getEmailCode = '/admin/sendEmail',
+  getPower = '/admin/openSafe',
+  checkLogin = '/code/checkLogin',
 }
 
 const loginApi = (data: LoginRequestData) =>
@@ -35,4 +37,16 @@ const logoutApi = () =>
 const getCodeApi = () =>
   service.post<Blob>(Api.getCode, null, { responseType: 'blob' })
 
-export { loginApi, logoutApi, getCodeApi, getEmailCodeApi }
+// 二次验证授权
+const getPowerApi = () => $http.get(Api.getPower)
+// 防止被挤下线，但是还认token的情况
+const checkLoginApi = () => $http.post(Api.checkLogin, {})
+
+export {
+  loginApi,
+  logoutApi,
+  getCodeApi,
+  getEmailCodeApi,
+  getPowerApi,
+  checkLoginApi,
+}

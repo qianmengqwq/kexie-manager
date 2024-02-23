@@ -1,5 +1,8 @@
 import { createWebHistory, RouteRecordRaw, createRouter } from 'vue-router'
 import { useToken } from '@/hooks/useToken'
+import { checkLoginApi } from '@/apis/login'
+import { throttle } from 'lodash-es'
+import { checkLoginStatus } from '@/enums'
 const { getToken } = useToken()
 
 const routes: RouteRecordRaw[] = [
@@ -62,11 +65,24 @@ const router = createRouter({
   routes,
 })
 
-const isLogin = () => {
-  const token = getToken()
-
-  return !!token
+const refreshToken = async () => {
+  const [e, r] = await checkLoginApi()
+  if (!e && r) {
+    if (r.code === checkLoginStatus.LOGGED_OUT) {
+      return false
+    }
+  }
+  return true
 }
+
+const throttledRefreshToken = throttle(refreshToken, 60000, { trailing: false })
+
+const isLogin = async () => {
+  const token = getToken()
+  if (!token) return false
+  return await throttledRefreshToken()
+}
+
 router.beforeEach(async (to) => {
   if (
     // 检查用户是否已登录

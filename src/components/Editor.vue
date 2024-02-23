@@ -19,7 +19,7 @@ import 'tinymce/plugins/wordcount' // 字数统计插件
 
 import { ref, reactive, onMounted, watch } from 'vue'
 import { ActivityStatusEnum } from '@/enums'
-import { createActApi, updateActApi } from '@/apis/activity'
+import { createActApi, updateActApi, uploadActPicApi } from '@/apis/activity'
 import { debounce } from 'lodash-es'
 import { useActivityStore } from '@/stores'
 import { storeToRefs } from 'pinia'
@@ -67,8 +67,17 @@ const tinymceId = ref(
   'vue-tinymce-' + +new Date() + ((Math.random() * 1000).toFixed(0) + ''),
 )
 
-// const uploadImg = async (blobInfo, progress) =>
-//   new Promise((resolve, reject) => {})
+const uploadImg = async (blobInfo: any) => {
+  const formData = new FormData()
+  formData.append('file', blobInfo.blob())
+  formData.append('aid', activeActId.value.toString())
+  const [e, r] = await uploadActPicApi(formData)
+  if (!e && r) {
+    const url = r.result
+    const reqUrl = '/getPic' + url.replace('https://kexie.cos.wuster.world', '')
+    return reqUrl
+  }
+}
 
 // 初始化
 const init = reactive({
@@ -85,7 +94,8 @@ const init = reactive({
   paste_webkit_styles: 'all',
   paste_merge_formats: true,
   paste_data_images: false, // 不允许粘贴图片
-  // images_upload_handler: uploadImg,
+  images_upload_credentials: true, //允许携带cookie
+  images_upload_handler: uploadImg,
 })
 
 //在onMounted中初始化编辑器

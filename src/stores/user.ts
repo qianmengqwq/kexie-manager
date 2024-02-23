@@ -45,14 +45,12 @@ export const useUserStore = defineStore(
         const res = await getPicApi(avatar.value as string).catch((e) => {
           console.error(e)
         })
-        console.log(res)
 
         if (res) {
           base64Avatar.value = await fileToBase64(res.data, '').catch((e) => {
             console.error(e)
             return ''
           })
-          console.log('base64Avatar', base64Avatar.value)
         }
       } catch (err) {
         console.error(err)

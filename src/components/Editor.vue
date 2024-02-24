@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <editor v-model="model" :init="init" :id="tinymceId"></editor>
-  </div>
+  <editor v-model="model" :init="init" :id="tinymceId"></editor>
 </template>
 
 <script lang="ts" setup>
@@ -94,6 +92,7 @@ const init = reactive({
   paste_data_images: false, // 不允许粘贴图片
   images_upload_credentials: true, //允许携带cookie
   images_upload_handler: uploadImg,
+  max_height: 600,
 })
 
 //在onMounted中初始化编辑器

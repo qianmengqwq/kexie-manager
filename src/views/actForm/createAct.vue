@@ -32,31 +32,31 @@ onMounted(() => {
   <!-- header -->
   <div class="flex">
     <PageHeader></PageHeader>
-    <div class="w-2/3"></div>
-    <div class="w-1/3">
-      <div class="space-x-2 mb-2">
-        <a-button type="primary" @click="onSubmit(ActivityStatusEnum.SAVED)"
-          >保存</a-button
-        >
-        <a-button type="primary" @click="onSubmit(ActivityStatusEnum.POSTED)"
-          >发布</a-button
-        >
-        <a-button type="primary" @click="resetForm">重置</a-button>
-        <a-button
-          type="primary"
-          @click="
-            router.push({
-              name: 'preview',
-            })
-          "
-          >预览</a-button
-        >
-      </div>
-    </div>
   </div>
 
   <!-- form -->
   <actForm ref="child"></actForm>
+
+  <!-- buttons -->
+  <div class="space-x-2 mb-2 flex justify-end items-center">
+    <a-button type="primary" @click="onSubmit(ActivityStatusEnum.SAVED)"
+      >保存</a-button
+    >
+    <a-button type="primary" @click="onSubmit(ActivityStatusEnum.POSTED)"
+      >发布</a-button
+    >
+    <a-button type="primary" @click="resetForm">重置</a-button>
+    <a-button
+      type="primary"
+      @click="
+        router.push({
+          name: 'preview',
+        })
+      "
+    >
+      预览
+    </a-button>
+  </div>
 </template>
 
 <style scoped></style>

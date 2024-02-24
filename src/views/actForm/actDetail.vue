@@ -5,10 +5,20 @@
     <actForm></actForm>
   </div>
   <div>
-    <div class="flex justify-end items-center w-full pr-12">
+    <div class="flex justify-end items-center w-full pr-12 gap-x-3">
       <a-button type="primary" @click="updateActApi(activityForm)"
         >修改</a-button
       >
+      <a-button
+        type="primary"
+        @click="
+          router.push({
+            name: 'preview',
+          })
+        "
+      >
+        预览
+      </a-button>
     </div>
   </div>
 </template>
@@ -22,6 +32,7 @@ import { useActivityStore } from '@/stores'
 import actForm from './actForm.vue'
 import { storeToRefs } from 'pinia'
 import { updateActApi } from '@/apis/activity'
+import router from '@/router'
 
 const route = useRoute()
 const activityid = Number(route.params.activityid)

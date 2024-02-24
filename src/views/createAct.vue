@@ -245,7 +245,6 @@ onMounted(() => {
             </a-form-item>
           </div>
         </div>
-
         <a-form-item label="菁英会员人数" name="totalnumber">
           <a-input-number
             :min="0"

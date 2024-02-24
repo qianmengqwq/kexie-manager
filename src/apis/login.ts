@@ -40,7 +40,7 @@ const getCodeApi = () =>
 // 二次验证授权
 const getPowerApi = () => $http.get(Api.getPower)
 // 防止被挤下线，但是还认token的情况
-const checkLoginApi = () => $http.post(Api.checkLogin, {})
+const checkLoginApi = () => $http.post<null>(Api.checkLogin, {})
 
 export {
   loginApi,

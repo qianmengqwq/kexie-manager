@@ -4,10 +4,16 @@ import {
   MenuFoldOutlined,
   LogoutOutlined,
   UploadOutlined,
+  UserAddOutlined,
 } from '@ant-design/icons-vue'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useLoginStore, useMenuStore, useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+import { getPowerApi } from '@/apis/login'
+import { registerApi } from '@/apis/user'
+import {} from '@/enums'
+import { User } from '@/types'
+
 const { isCollapse } = storeToRefs(useMenuStore())
 const { logout } = useLoginStore()
 const { uploadAvatar, getPic, getUserInfo } = useUserStore()
@@ -15,6 +21,30 @@ const { userInfo, base64Avatar, notifyNum } = storeToRefs(useUserStore())
 
 const handleUpload = (obj: any) => {
   uploadAvatar(obj.file)
+}
+
+const hasVerifyTwice = ref(false)
+const isShowRegist = ref(false)
+const regist = async () => {
+  if (!hasVerifyTwice.value) {
+    const [e, r] = await getPowerApi()
+    if (!e && r) {
+      hasVerifyTwice.value = true
+    }
+  }
+}
+const registerForm = ref<User>({
+  username: '',
+  password: '',
+  email: '',
+  level: 0,
+  pic: '',
+})
+const handleRegistSubmit = async () => {
+  const [e, r] = await registerApi(registerForm.value)
+  if (!e && r) {
+    isShowRegist.value = false
+  }
 }
 
 onMounted(async () => {
@@ -63,10 +93,20 @@ onMounted(async () => {
         <span class="text-center text-lg"
           >hello，{{ userInfo.username || '管理员' }}！</span
         >
+        <UserAddOutlined class="trigger text-lg ml-2" @click="regist" />
         <LogoutOutlined class="trigger text-lg mr-2" @click="logout" />
       </div>
     </div>
   </div>
+  <dialog>
+    <a-modal
+      v-model:open="isShowRegist"
+      title="注册"
+      @ok="handleRegistSubmit"
+      centered
+    >
+    </a-modal>
+  </dialog>
 </template>
 
 <style scoped></style>

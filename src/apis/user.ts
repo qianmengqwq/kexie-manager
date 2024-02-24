@@ -5,6 +5,7 @@ import { User } from '@/types'
 enum Api {
   getUserInfo = '/admin/get',
   uploadAvatar = '/admin/adminPic',
+  register = '/admin/regis',
 }
 
 const getUserInfoApi = (id: number) =>
@@ -20,4 +21,9 @@ const getPicApi = (picUrl: string) => {
   return axios.get<Blob>(`/getPic/${url}`, { responseType: 'blob' })
 }
 
-export { getUserInfoApi, uploadAvatarApi, getPicApi }
+const registerApi = (data: User) =>
+  $http.post(Api.register, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+
+export { getUserInfoApi, uploadAvatarApi, getPicApi, registerApi }

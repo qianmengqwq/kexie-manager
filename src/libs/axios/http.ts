@@ -5,6 +5,7 @@ import { AxiosInstance } from 'axios'
 import { ResponseCodeEnum } from '@/enums'
 import type { KexieResponse } from '@/types'
 import type { AxiosRequestConfig } from 'axios'
+import router from '@/router'
 
 interface ExtendAxiosParams {
   IsShowErrorMsg?: boolean
@@ -33,7 +34,7 @@ const $http = {
           const res = result.data
           // 判断业务成功，不是的话扔到catch分支处理
           if (res.code !== ResponseCodeEnum.SUCCESS) {
-            throw new Error(res.msg)
+            throw res
           }
           handleRequestMsg(extendParams?.IsShowSuccessMsg, 'success', res?.msg)
           resolve([null, res])
@@ -57,7 +58,7 @@ const $http = {
           const res = result.data
           // 判断业务成功，不是的话扔到catch分支处理
           if (res.code !== ResponseCodeEnum.SUCCESS) {
-            throw new Error(res.msg)
+            throw res
           }
           handleRequestMsg(extendParams?.IsShowSuccessMsg, 'success', res?.msg)
           resolve([null, res])
@@ -88,6 +89,11 @@ service.interceptors.response.use(
     return response
   },
   function (error) {
+    if (error.response.data.msg.includes('token')) {
+      router.push({ name: 'login' })
+      message.error(error.response.data.msg)
+    }
+
     if (error?.message?.includes?.('timeout')) {
       message.error('网络错误!')
     } else {

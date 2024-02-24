@@ -38,8 +38,6 @@ const handleLogin = async () => {
     if (!e && r) {
       const { result } = r
       userId.value = result.uid
-      console.log('userId', userId.value)
-
       router.push('/create')
     }
   })

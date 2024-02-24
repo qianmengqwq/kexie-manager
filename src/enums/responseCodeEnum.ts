@@ -5,6 +5,8 @@ enum ResponseCodeEnum {
   SYSTEMERROR = 4040,
   //传参错误
   PARAMSERROR = 1001,
+  //token过期
+  TOKENEXPIRE = 1002,
 }
 
 export { ResponseCodeEnum }

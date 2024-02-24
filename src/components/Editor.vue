@@ -25,8 +25,8 @@ import { useActivityStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { Activity } from '@/types'
 
-const { activityForm, activeActId } = storeToRefs(useActivityStore())
-const state = ref(false)
+const { activityForm, activeActId, status } = storeToRefs(useActivityStore())
+const hasCreated = ref(false)
 const model = defineModel()
 
 const checkFormEmpty = (activityForm: Activity) => {
@@ -38,8 +38,8 @@ const checkFormEmpty = (activityForm: Activity) => {
   return false
 }
 const saveContent = async () => {
-  if (checkFormEmpty(activityForm.value)) return
-  if (state.value) {
+  if (checkFormEmpty(activityForm.value) || status.value === 'update') return
+  if (hasCreated.value && status.value === 'create') {
     updateActApi({
       ...activityForm.value,
       status: ActivityStatusEnum.SAVED,
@@ -54,7 +54,7 @@ const saveContent = async () => {
       const { result } = r
       activeActId.value = result
     }
-    state.value = true
+    hasCreated.value = true
   }
 }
 const deboncedSave = debounce(saveContent, 1000)

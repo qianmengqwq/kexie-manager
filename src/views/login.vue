@@ -103,12 +103,6 @@ onMounted(() => {
           <a-form-item name="status">
             <div class="to-between min-w-80">
               <a-checkbox v-model:checked="isRemberMe">记住我</a-checkbox>
-              <!-- <span
-                @click="loginType = loginTypeEnum.EMAIL"
-                class="text-sky-400 cursor-pointer"
-              >
-                邮箱登录
-              </span> -->
             </div>
           </a-form-item>
 

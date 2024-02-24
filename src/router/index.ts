@@ -21,19 +21,19 @@ const routes: RouteRecordRaw[] = [
         path: 'create',
         name: 'create',
         meta: { title: '创建新的活动' },
-        component: () => import('@/views/createAct.vue'),
+        component: () => import('@/views/actForm/createAct.vue'),
       },
       {
         path: 'saved',
         name: 'saved',
         meta: { title: '已保存的活动' },
-        component: () => import('@/views/savedAct.vue'),
+        component: () => import('@/views/actList/savedAct.vue'),
       },
       {
         path: 'posted',
         name: 'posted',
         meta: { title: '已发布的活动' },
-        component: () => import('@/views/postedAct.vue'),
+        component: () => import('@/views/actList/postedAct.vue'),
       },
       {
         path: 'infoExtraction',
@@ -47,7 +47,7 @@ const routes: RouteRecordRaw[] = [
     path: '/actDetail/:activityid',
     name: 'actDetail',
     meta: { title: '活动详情' },
-    component: () => import('@/views/actDetail.vue'),
+    component: () => import('@/views/actForm/actDetail.vue'),
   },
   {
     path: '/preview',

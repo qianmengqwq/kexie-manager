@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {
   getPostedActListApi,
+  getSavedActListApi,
   deleteActByIdApi,
   updateActApi,
 } from '@/apis/activity'
@@ -8,6 +9,8 @@ import PageHeader from '@/components/PageHeader.vue'
 import { ref, onMounted } from 'vue'
 import { ActivityStatusEnum } from '@/enums'
 import type { Activity, PageParam } from '@/types'
+
+const props = defineProps<{ listType: 'posted' | 'saved' }>()
 
 const columns = [
   {
@@ -47,6 +50,7 @@ const columns = [
 ]
 
 const postedActList = ref<Activity[]>()
+const savedActList = ref<Activity[]>()
 const isLoading = ref(true)
 const pageParam = ref<PageParam>({
   page: 1,
@@ -64,6 +68,16 @@ const getPostedActList = async () => {
   }
 }
 
+const getSavedActList = async () => {
+  const [e, r] = await getSavedActListApi()
+  if (!e && r) {
+    const { result } = r
+    savedActList.value = result.rows
+    pageParam.value.total = result.total
+    isLoading.value = false
+  }
+}
+
 const handleDelete = async (id: string) => {
   const [e, r] = await deleteActByIdApi(id)
   if (!e && r) {
@@ -71,23 +85,26 @@ const handleDelete = async (id: string) => {
   }
 }
 
-const handleRevert = async (record: Activity) => {
-  record.status = ActivityStatusEnum.SAVED
+const handleOperate = async (record: Activity) => {
+  record.status =
+    props.listType === 'posted'
+      ? ActivityStatusEnum.SAVED
+      : ActivityStatusEnum.POSTED
   const [e, r] = await updateActApi(record)
   if (!e && r) {
-    getPostedActList()
+    props.listType === 'posted' ? getPostedActList() : getSavedActList()
   }
 }
 
 onMounted(async () => {
-  getPostedActList()
+  props.listType === 'posted' ? getPostedActList() : getSavedActList()
 })
 </script>
 <template>
   <PageHeader></PageHeader>
   <a-table
     :columns="columns"
-    :data-source="postedActList"
+    :data-source="props.listType === 'posted' ? postedActList : savedActList"
     bordered
     :loading="isLoading"
   >
@@ -102,7 +119,9 @@ onMounted(async () => {
             >详情</router-link
           >
           <a class="ml-2" @click="handleDelete(record.activityid)">删除</a>
-          <a class="ml-2" @click="handleRevert(record)">撤回</a>
+          <a class="ml-2" @click="handleOperate(record)">{{
+            listType === 'posted' ? '撤回' : '发布'
+          }}</a>
         </span>
       </template>
     </template>

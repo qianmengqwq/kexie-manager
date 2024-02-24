@@ -20,6 +20,24 @@ export const useActivityStore = defineStore('activity', () => {
   })
 
   const activeActId = ref<number>(0)
+  const status = ref<'create' | 'update'>()
+
+  const $reset = () => {
+    activityForm.value = {
+      title: '',
+      college: undefined,
+      signupdeadline: '',
+      holdtime: '',
+      addressonline: '',
+      addressoffline: '',
+      speaker: '',
+      qqgroup: '',
+      totalnumber: undefined,
+      totalvipnumber: undefined,
+      totalnotvipnumber: undefined,
+      content: '',
+    }
+  }
 
   // 超出限制的值，input框里可以接收
   const sliderNum = computed({
@@ -38,8 +56,10 @@ export const useActivityStore = defineStore('activity', () => {
   })
 
   return {
+    status,
+    activeActId,
     activityForm,
     sliderNum,
-    activeActId,
+    $reset,
   }
 })

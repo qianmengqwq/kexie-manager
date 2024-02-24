@@ -6,7 +6,7 @@ const title = useMetaTitle()
 </script>
 
 <template>
-  <a-page-header :title="title" @back="router.back()" class="pt-0" />
+  <a-page-header :title="title" @back="router.back()" />
 </template>
 
 <style scoped></style>

@@ -3,7 +3,7 @@
     <sidebar></sidebar>
     <a-layout>
       <topbar></topbar>
-      <a-layout-content class="content mx-4 my-6 p-6 bg-white min-h-72">
+      <a-layout-content class="content mx-4 my-6 p-6 pt-0 bg-white min-h-72">
         <RouterView></RouterView>
       </a-layout-content>
     </a-layout>

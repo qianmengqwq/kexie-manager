@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import { createActApi } from '@/apis/activity'
 import { useCollegeStore, useActivityStore } from '@/stores'
-import router from '@/router'
+
 import { storeToRefs } from 'pinia'
 import Editor from '@/components/Editor.vue'
-import PageHeader from '@/components/PageHeader.vue'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formRef = ref()
+
 const labelCol = { span: 6 }
 const wrapperCol = { span: 18 }
 
-const { activityForm, sliderNum } = storeToRefs(useActivityStore())
+const { activityForm, sliderNum, status } = storeToRefs(useActivityStore())
+const { $reset } = useActivityStore()
 const { collegeList } = storeToRefs(useCollegeStore())
 const { getCollegeList } = useCollegeStore()
 
@@ -96,45 +96,18 @@ const rules: Record<string, Rule[]> = {
   ],
 }
 
-const onSubmit = async (status: number) => {
-  formRef.value.validate().then(() => {
-    createActApi({ ...activityForm.value, status })
-  })
-}
-const resetForm = () => {
-  formRef.value.resetFields()
-  activityForm.value.content = ''
-}
-
 onMounted(() => {
   getCollegeList()
+  if (status.value === 'create') {
+    $reset()
+  }
 })
+
+defineExpose({ formRef })
 </script>
-
 <template>
-  <!-- header -->
   <div class="flex">
-    <PageHeader></PageHeader>
-    <div class="w-2/3"></div>
-    <div class="w-1/3">
-      <div class="space-x-2 mb-2">
-        <a-button type="primary" @click="onSubmit(0)">保存</a-button>
-        <a-button type="primary" @click="onSubmit(1)">发布</a-button>
-        <a-button type="primary" @click="resetForm">重置</a-button>
-        <a-button
-          type="primary"
-          @click="
-            router.push({
-              name: 'preview',
-            })
-          "
-          >预览</a-button
-        >
-      </div>
-    </div>
-  </div>
-
-  <div class="flex">
+    <!-- form -->
     <div>
       <a-form
         ref="formRef"
@@ -266,11 +239,10 @@ onMounted(() => {
         </a-form-item>
       </a-form>
     </div>
+    <!-- editor -->
     <div>
       <header class="mb-3">活动内容:</header>
       <Editor v-model="activityForm.content"></Editor>
     </div>
   </div>
 </template>
-
-<style scoped></style>

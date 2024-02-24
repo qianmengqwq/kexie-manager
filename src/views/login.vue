@@ -1,49 +1,49 @@
 <script setup lang="ts">
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import router from '@/router'
 import { loginApi } from '@/apis/login'
 import { useUserStore, useLoginStore } from '@/stores'
-import { loginTypeEnum } from '@/enums'
+import { useStorage } from '@/hooks/useStorage'
+import { useToken } from '@/hooks/useToken'
 import type { LoginRequestData } from '@/types'
 
-// 账密登录
-const { userId } = storeToRefs(useUserStore())
+const { setStorage } = useStorage()
+const { setStorage: setSessionStorage } = useStorage('sessionStorage')
 // base64验证码
 const { codeBase64 } = storeToRefs(useLoginStore())
 const { getCode } = useLoginStore()
 
-// 关于表单的状态要不要抽离到store里，我也思考了很久，
-//最后的方案是表单留在login组件里，因为没有任何跨组件通讯的需求，然后把登录获取的id放到store里存储
 const loginForm = reactive<LoginRequestData>({
   username: '',
   password: '',
-  status: 0,
   code: '',
 })
 
-const isRemberMe = computed({
-  get() {
-    return loginForm.status === 1
-  },
-  set(value) {
-    loginForm.status = value ? 1 : 0
-  },
-})
-
+const isRemberMe = ref<boolean>(false)
+const { getUserInfo } = useUserStore()
+const { userInfo } = storeToRefs(useUserStore())
+const { removeToken } = useToken()
 const loginFormRef = ref()
 const handleLogin = async () => {
   loginFormRef.value.validate().then(async () => {
     const [e, r] = await loginApi(loginForm)
     if (!e && r) {
-      const { result } = r
-      userId.value = result.uid
+      const uid = r.result.uid
+      getUserInfo(uid).then(() => {
+        if (isRemberMe.value) {
+          setStorage('userInfo', userInfo.value)
+        } else {
+          setSessionStorage('userInfo', userInfo.value)
+          window.onbeforeunload = () => {
+            removeToken()
+          }
+        }
+      })
       router.push('/create')
     }
   })
 }
-
-const { loginType } = storeToRefs(useLoginStore())
 
 onMounted(() => {
   getCode()
@@ -55,15 +55,11 @@ onMounted(() => {
     <div class="flex w-1/2"></div>
     <div class="flex w-1/2">
       <div class="to-mid flex-1 flex-col">
-        <div class="text-2xl font-bold mb-2">
-          {{ loginType === loginTypeEnum.PASSWORD ? '登录' : '邮箱验证' }}
-        </div>
+        <div class="text-2xl font-bold mb-2">登录</div>
         <a-form
-          v-show="loginType === loginTypeEnum.PASSWORD"
           ref="loginFormRef"
           :model="loginForm"
           name="basic"
-          autocomplete="off"
           @keypress.enter="handleLogin"
         >
           <a-form-item
@@ -93,10 +89,11 @@ onMounted(() => {
               v-model:value="loginForm.code"
               placeholder="验证码"
               class="min-w-80 h-9"
+              autocomplete="off"
             />
             <div
               v-show="codeBase64"
-              @click="useLoginStore().getCode()"
+              @click="getCode"
               class="cursor-pointer absolute top-0 right-1 flex justify-center items-center h-9 w-24"
             >
               <img :src="codeBase64" alt="" class="h-8" />
@@ -106,12 +103,12 @@ onMounted(() => {
           <a-form-item name="status">
             <div class="to-between min-w-80">
               <a-checkbox v-model:checked="isRemberMe">记住我</a-checkbox>
-              <span
+              <!-- <span
                 @click="loginType = loginTypeEnum.EMAIL"
                 class="text-sky-400 cursor-pointer"
               >
                 邮箱登录
-              </span>
+              </span> -->
             </div>
           </a-form-item>
 

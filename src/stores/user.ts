@@ -1,75 +1,69 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getUserInfoApi, uploadAvatarApi, getPicApi } from '@/apis/user'
-import { useFileConversion } from '@/hooks/useFileConversion'
+import { getUserInfoApi, uploadAvatarApi } from '@/apis/user'
+import Cookies from 'js-cookie'
+import { StorageLike } from 'pinia-plugin-persistedstate'
 import { useStorage } from '@/hooks/useStorage'
 import type { User } from '@/types'
 
-const [fileToBase64] = useFileConversion()
+// 属于二次验证的Storage，使用pinia持久化存储，目前只能定死expires无法复用，暂未找到更好的解决方案
+const cookieStorage: StorageLike = {
+  getItem: (key) => {
+    const value = Cookies.get(key)
+    if (!value) return null
+    return value!
+  },
+  setItem: (key, value) =>
+    Cookies.set(key, value, { expires: new Date(Date.now() + 6 * 60 * 1000) }),
+}
+
+const { getStorage } = useStorage()
+const { getStorage: getSessionStorage } = useStorage('sessionStorage')
+
 export const useUserStore = defineStore(
   'user',
   () => {
-    const { getStorage } = useStorage()
-
-    // 先尝试拿一下有的id
-    const userId = ref<number>(getStorage('user')?.userId || 0)
-
-    const avatar = ref<string>()
-    const base64Avatar = ref<string>('')
-    const userInfo = ref<User>({} as User)
+    const userInfo = ref<User>(
+      getStorage('userInfo') || getSessionStorage('userInfo') || ({} as User),
+    )
 
     const notifyNum = ref<number>(0)
 
-    const getUserInfo = async () => {
-      if (userId.value === 0) return
-      const [e, r] = await getUserInfoApi(userId.value)
+    const hasVerifiedTwice = ref<boolean>(false)
+
+    const getUserInfo = async (userId: number) => {
+      if (userId === 0) return
+      const [e, r] = await getUserInfoApi(userId)
       if (!e && r) {
         const { result } = r
         userInfo.value = result
-        avatar.value = result.pic
       }
     }
 
     const uploadAvatar = async (file: File) => {
       const form = new FormData()
       form.append('file', file)
-      form.append('uid', userId.value.toString())
+      form.append('uid', userInfo.value.id.toString())
       const [e, r] = await uploadAvatarApi(form)
       if (!e && r) {
-        getUserInfo().then(getPic)
+        getUserInfo(userInfo.value.id)
       }
     }
 
-    const getPic = async () => {
-      try {
-        const res = await getPicApi(avatar.value as string).catch((e) => {
-          console.error(e)
-        })
-
-        if (res) {
-          base64Avatar.value = await fileToBase64(res.data, '').catch((e) => {
-            console.error(e)
-            return ''
-          })
-        }
-      } catch (err) {
-        console.error(err)
-      }
-    }
     return {
-      userId,
       notifyNum,
       userInfo,
-      avatar,
-      base64Avatar,
+      hasVerifiedTwice,
       getUserInfo,
       uploadAvatar,
-      getPic,
     }
   },
   {
+    //需要过期的都存在cookie里
+    //token的操作后端已经实现
     persist: {
-      paths: ['userId'],
+      paths: ['hasVerifiedTwice'],
+      storage: cookieStorage,
     },
   },
 )

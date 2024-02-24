@@ -73,9 +73,7 @@ const uploadImg = async (blobInfo: any) => {
   formData.append('aid', activeActId.value.toString())
   const [e, r] = await uploadActPicApi(formData)
   if (!e && r) {
-    const url = r.result
-    const reqUrl = '/getPic' + url.replace('https://kexie.cos.wuster.world', '')
-    return reqUrl
+    return r.result
   }
 }
 

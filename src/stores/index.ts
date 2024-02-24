@@ -4,7 +4,10 @@ export * from './login'
 export * from './college'
 export * from './activity'
 import { createPinia } from 'pinia'
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import { createPersistedState } from 'pinia-plugin-persistedstate'
+
 const store = createPinia()
-store.use(piniaPluginPersistedstate)
+
+store.use(createPersistedState())
+
 export default store

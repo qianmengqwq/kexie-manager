@@ -67,7 +67,7 @@ const $http = {
           handleRequestMsg(
             extendParams?.IsShowErrorMsg,
             'error',
-            error?.message,
+            error.message || error.msg || undefined,
           )
           resolve([error, undefined])
         })

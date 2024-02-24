@@ -12,10 +12,4 @@
 <script lang="ts" setup>
 import sidebar from './components/sidebar.vue'
 import topbar from './components/topbar.vue'
-import { useUserStore } from '@/stores'
-import { onMounted } from 'vue'
-const { getUserInfo } = useUserStore()
-onMounted(() => {
-  getUserInfo()
-})
 </script>

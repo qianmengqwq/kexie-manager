@@ -245,7 +245,7 @@ onMounted(() => {
             </a-form-item>
           </div>
         </div>
-        <a-form-item label="菁英会员人数" name="totalnumber">
+        <a-form-item label="菁英会员人数" name="totalvipnumber">
           <a-input-number
             :min="0"
             v-model:value="activityForm.totalvipnumber"
@@ -255,7 +255,7 @@ onMounted(() => {
           />
         </a-form-item>
 
-        <a-form-item label="非菁英会员人数" name="totalnumber">
+        <a-form-item label="非菁英会员人数" name="totalnotvipnumberr">
           <a-input-number
             :min="0"
             v-model:value="activityForm.totalnotvipnumber"

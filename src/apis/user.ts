@@ -21,9 +21,10 @@ const getPicApi = (picUrl: string) => {
   return axios.get<Blob>(`/getPic/${url}`, { responseType: 'blob' })
 }
 
-const registerApi = (data: User) =>
-  $http.post(Api.register, data, {
-    headers: { 'Content-Type': 'multipart/form-data' },
+const registerApi = (data: Omit<User, 'id'>) =>
+  $http.post(Api.register, data, undefined, {
+    IsShowErrorMsg: true,
+    IsShowSuccessMsg: true,
   })
 
 export { getUserInfoApi, uploadAvatarApi, getPicApi, registerApi }

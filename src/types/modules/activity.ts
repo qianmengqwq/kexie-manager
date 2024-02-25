@@ -2,6 +2,7 @@ interface Activity {
   activityid?: number
   status?: number
   purl?: string
+  cover?: string
   holdtime?: string
   content?: string
   college?: string

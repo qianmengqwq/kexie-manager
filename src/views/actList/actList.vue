@@ -62,6 +62,7 @@ const getPostedActList = async () => {
   const [e, r] = await getPostedActListApi()
   if (!e && r) {
     const { result } = r
+
     postedActList.value = result.rows
     pageParam.value.total = result.total
     isLoading.value = false

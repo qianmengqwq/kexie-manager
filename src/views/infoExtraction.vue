@@ -4,11 +4,13 @@ import {
   getFilteredResultById,
   filterSignupInfoApi,
   getSignupInfoByIdApi,
-  getSignUpInfoListApi,
+  judgeSignupApi,
 } from '@/apis/signup'
 import { ref, onMounted } from 'vue'
+import { SignupStatusEnum } from '@/enums'
 import PageHeader from '@/components/PageHeader.vue'
-import type { Activity, PageParam, Student } from '@/types'
+import { StudentStatusEnum } from '@/enums'
+import type { Activity, Student } from '@/types'
 
 interface ListData {
   vipList: Student[]
@@ -60,8 +62,6 @@ const doFilter = async () => {
       notVipNumber: notVipCounts,
     }
     getFilteredData()
-    getSignupInfo()
-    getTableData()
   }
 }
 
@@ -86,23 +86,26 @@ const toggleAct = async (activity: Activity) => {
   getFilteredData()
   //获取报名信息
   getSignupInfo()
-  //获取底部报名信息table
-  getTableData()
 }
 
-const pageParam = ref<PageParam>({
-  page: 1,
-  pageSize: 10,
-  total: 0,
-})
-const getTableData = async () => {
-  const [e, r] = await getSignUpInfoListApi(pageParam.value)
-  if (!e && r) {
-    const { result } = r
-    console.log(result)
-    pageParam.value.total = result.total
-    signupInfoList.value = result.rows
+const judgeSignup = async (studentId: number, status: number) => {
+  const param = {
+    studentId: studentId,
+    activityId: activeItem.value.activityid!,
+    status: status,
   }
+  const [e, r] = await judgeSignupApi(param)
+  if (!e && r) {
+    getFilteredData()
+    getSignupInfo()
+  }
+}
+
+const activeStudent = ref<Student>({} as Student)
+const isShowStudentDetail = ref(false)
+const getStudentDetail = (record: Student) => {
+  activeStudent.value = record
+  isShowStudentDetail.value = true
 }
 
 const columns = [
@@ -136,6 +139,10 @@ const columns = [
     dataIndex: 'vip',
     key: 'vip',
   },
+  {
+    title: '操作',
+    key: 'action',
+  },
 ]
 
 onMounted(async () => {
@@ -156,7 +163,7 @@ onMounted(async () => {
                 <a @click="toggleAct(item)">{{ item.title }}</a>
               </template>
               <template #avatar>
-                <a-avatar shape="square" src="" />
+                <a-avatar shape="square" :src="item.cover" />
               </template>
             </a-list-item-meta>
           </a-list-item>
@@ -181,7 +188,21 @@ onMounted(async () => {
             class="h-64"
           >
             <template #renderItem="{ item }">
-              <a-list-item>{{ item.name }}</a-list-item>
+              <a-list-item>
+                <span>{{ item.name }}</span>
+                <span>
+                  <a class="text-blue-500 mr-2" @click="getStudentDetail(item)"
+                    >详情</a
+                  >
+                  <a
+                    class="text-blue-500"
+                    @click="
+                      judgeSignup(item.studentid, SignupStatusEnum.REJECT)
+                    "
+                    >拒绝
+                  </a>
+                </span>
+              </a-list-item>
             </template>
             <template #header>
               <div>vip</div>
@@ -196,7 +217,21 @@ onMounted(async () => {
             class="h-64"
           >
             <template #renderItem="{ item }">
-              <a-list-item>{{ item.name }}</a-list-item>
+              <a-list-item>
+                <span class="mr-2">{{ item.name }}</span>
+                <span>
+                  <a class="text-blue-500 mr-2" @click="getStudentDetail(item)"
+                    >详情</a
+                  >
+                  <a
+                    class="text-blue-500"
+                    @click="
+                      judgeSignup(item.studentid, SignupStatusEnum.REJECT)
+                    "
+                    >拒绝
+                  </a>
+                </span>
+              </a-list-item>
             </template>
             <template #header>
               <div>非vip</div>
@@ -206,8 +241,39 @@ onMounted(async () => {
       </div>
       <!-- table -->
       <div class="mt-4 flex flex-col h-64">
-        <a-table :dataSource="signupInfoList" :columns="columns" />
+        <a-table :dataSource="signupInfoList" :columns="columns"
+          >\
+          <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'action'">
+              <span class="text-blue-500">
+                <a class="ml-2" @click="getStudentDetail(record)">详情</a>
+                <a
+                  class="ml-2"
+                  @click="judgeSignup(record.studentid, SignupStatusEnum.ARGEE)"
+                  >同意</a
+                >
+              </span>
+            </template>
+          </template>
+        </a-table>
       </div>
     </div>
   </div>
+  <a-modal
+    v-model:open="isShowStudentDetail"
+    title="学生详情"
+    @ok="isShowStudentDetail = false"
+  >
+    <p>姓名: {{ activeStudent.name }}</p>
+    <p>学号: {{ activeStudent.studentid }}</p>
+    <p>学院: {{ activeStudent.college }}</p>
+    <p>专业: {{ activeStudent.major }}</p>
+    <p>班级: {{ activeStudent.clazz }}</p>
+    <p>手机号: {{ activeStudent.phonenumber }}</p>
+    <p>邮箱: {{ activeStudent.email }}</p>
+    <p>
+      是否为菁英会员:
+      {{ activeStudent.status === StudentStatusEnum.VIP ? '是' : '否' }}
+    </p>
+  </a-modal>
 </template>
